@@ -37,24 +37,24 @@ void vidurkis(Studentas& A, double n){
 
 int main(){
     Studentas A;
+    double n;
     std::cout << "Iveskite varda ir pavarde: ";
     std::cin >> A.Var >> A.Pav;
     std::cout << "Kiek pazymiu turi studentas? ";
-    double n, temp, sum=0;
     std::cin >> n;
     vidurkis(A, n);
     median(A, n);
-    /*std::cout << "Ka noretumet pamatyt? Mediana - 1, arba Vidurki - 2 ";
+    std::cout << "Ka noretumet pamatyt? Mediana - 1, arba Vidurki - 2 ";
     int a;
     std::cin >> a;
     if(a == 1){
-        std::cout << A.Var << " " << A.Pav << " " << median << std::endl;
+        std::cout << std::fixed << "Vardas" << std::setw(10) << "Pavarde" << std::setw(20) << "Galutinis (Med.)" << std::endl;
+        std::cout << "-----------------------------------------------------------------------------------" << std::endl;
+        std::cout << std::fixed << std::setprecision(2) << A.Var << std::setw(10) << A.Pav << std::setw(9) << A.median << std::endl;
     }
     else{
-        std::cout << std::fixed << std::setprecision(2) << A.Var << " " << A.Pav << " " << (sum / n) * 0.4 + 0.6 * A.rez << std::endl;
-    }*/
-
-    std::cout << std::fixed << "Vardas" << std::setw(10) << "Pavarde" << std::setw(40) << "Galutinis (Vid.) / Galutinis (Med.)" << std::endl;
-    std::cout << "-----------------------------------------------------------------------------------" << std::endl;
-    std::cout << std::fixed << std::setprecision(2) << A.Var << std::setw(10) << A.Pav << std::setw(13) << A.vid << std::setw(19) << A.median << std::endl;
+        std::cout << std::fixed << "Vardas" << std::setw(10) << "Pavarde" << std::setw(20) << "Galutinis (Vid.)" << std::endl;
+        std::cout << "-----------------------------------------------------------------------------------" << std::endl;
+        std::cout << std::fixed << std::setprecision(2) << A.Var << std::setw(10) << A.Pav << std::setw(9) << A.vid << std::endl;
+    }
 }
