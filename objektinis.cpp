@@ -7,10 +7,20 @@
 struct Studentas
 {
     std::string Var="A", Pav="B";
-    //int *paz;
     double rez;
+    double median, vid;
     std::vector<int> paz;
 };
+
+void median(Studentas& A, double n){
+    std::sort(A.paz.begin(), A.paz.end());
+    if(int(n) % 2 == 0){
+        A.median = (A.paz[n/2 - 1] + A.paz[n/2])/2.0;
+    }
+    else{
+        A.median = A.paz[int(n/2)];
+    }
+}
 
 int main(){
     Studentas A;
@@ -18,7 +28,6 @@ int main(){
     std::cin >> A.Var >> A.Pav;
     std::cout << "Kiek pazymiu turi studentas? ";
     double n, temp, sum=0;
-    double median;
     std::cin >> n;
     for(int i=0; i<n; i++){
         std::cout << "Ivesk " << i+1 << " is " << n << std::endl;
@@ -26,13 +35,14 @@ int main(){
         A.paz.push_back(temp);
         sum += temp;
     }
-    std::sort(A.paz.begin(), A.paz.end());
+    median(A, n);
+    /*std::sort(A.paz.begin(), A.paz.end());
     if(int(n) % 2 == 0){
         median = (A.paz[n/2 - 1] + A.paz[n/2])/2.0;
     }
     else{
         median = A.paz[int(n/2)];
-    }
+    }*/
     std::cout << "Koks yra studento egzamino rezultatas? ";
     std::cin >> A.rez;
     /*std::cout << "Ka noretumet pamatyt? Mediana - 1, arba Vidurki - 2 ";
@@ -47,5 +57,5 @@ int main(){
 
     std::cout << std::fixed << "Vardas" << std::setw(10) << "Pavarde" << std::setw(40) << "Galutinis (Vid.) / Galutinis (Med.)" << std::endl;
     std::cout << "-----------------------------------------------------------------------------------" << std::endl;
-    std::cout << std::fixed << std::setprecision(2) << A.Var << std::setw(10) << A.Pav << std::setw(13) << (sum / n) * 0.4 + 0.6 * A.rez << std::setw(19) << median << std::endl;
+    std::cout << std::fixed << std::setprecision(2) << A.Var << std::setw(10) << A.Pav << std::setw(13) << (sum / n) * 0.4 + 0.6 * A.rez << std::setw(19) << A.median << std::endl;
 }
