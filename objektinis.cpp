@@ -12,7 +12,7 @@ struct Studentas
     std::vector<int> paz;
 };
 
-void median(Studentas& A, double n){
+void median(Studentas& A, double n){ //Medianos skaiciavimo funkcija
     std::sort(A.paz.begin(), A.paz.end());
     if(int(n) % 2 == 0){
         A.median = (A.paz[n/2 - 1] + A.paz[n/2])/2.0;
@@ -21,7 +21,7 @@ void median(Studentas& A, double n){
         A.median = A.paz[int(n/2)];
     }
 }
-void vidurkis(Studentas& A, double n){
+void vidurkis(Studentas& A, double n){ //Vidurkio skaiciavimo funkcija
     double sum=0;
     for(int i=0; i<n; i++){
         int temp;
@@ -35,15 +35,7 @@ void vidurkis(Studentas& A, double n){
         A.vid = (sum / n) * 0.4 + 0.6 * A.rez;
 }
 
-int main(){
-    Studentas A;
-    double n;
-    std::cout << "Iveskite varda ir pavarde: ";
-    std::cin >> A.Var >> A.Pav;
-    std::cout << "Kiek pazymiu turi studentas? ";
-    std::cin >> n;
-    vidurkis(A, n);
-    median(A, n);
+void result(Studentas& A){ //Funkcija, kuri isveda i konsole rezultatus skaiciavimu ir galima pasirinkti tarp medianos ir vidurkio isvesties
     std::cout << "Ka noretumet pamatyt? Mediana - 1, arba Vidurki - 2 ";
     int a;
     std::cin >> a;
@@ -57,4 +49,16 @@ int main(){
         std::cout << "-----------------------------------------------------------------------------------" << std::endl;
         std::cout << std::fixed << std::setprecision(2) << A.Var << std::setw(10) << A.Pav << std::setw(9) << A.vid << std::endl;
     }
+}
+
+int main(){
+    Studentas A;
+    double n;
+    std::cout << "Iveskite varda ir pavarde: ";
+    std::cin >> A.Var >> A.Pav;
+    std::cout << "Kiek pazymiu turi studentas? ";
+    std::cin >> n;
+    vidurkis(A, n);
+    median(A, n);
+    result(A);
 }
