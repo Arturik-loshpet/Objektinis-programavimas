@@ -29,6 +29,8 @@ void egz_ivestis_random(Studentas& temp);
 void vidurkis(std::vector<Studentas>& stud);
 void mediana(std::vector<Studentas>& stud);
 void isvestis(std::vector<Studentas>& stud);
+void vardu_ivedimas_random(Studentas& temp);
+void vardu_ivedimas_ranka(Studentas& temp, std::vector<Studentas>& stud);
 
 
 int main() {
@@ -40,23 +42,14 @@ int main() {
         int last;
         int m;
           while(true){
-            std::string vardas, pavarde;
             std::cout << "Ar studentu vardus ir pavardes norite vesti: ranka - 1, ar sugeneruoti - 2? ";
             std::cin >> input;
             if (validation(input) == 1){
-                while(true){
-                    std::cout << "Koks yra " << stud.size() + 1 << " studento vardas ir pavarde? ";
-                    std::cin >> vardas >> pavarde;
-                    if(valid_name(vardas) == true && valid_name(pavarde) == true){
-                        temp.vardas = vardas;
-                        temp.pavarde = pavarde;
-                        break;
-                    }
-                    else std::cout << "Iveskite tinkama varda ir pavarde\n";
-                }
+                vardu_ivedimas_ranka(temp, stud);
                 break;
             }
             else if(validation(input) == 2){ 
+                vardu_ivedimas_random(temp);
                 break;
             }
             else std::cout << "Iveskite tinkama sk! ";
@@ -223,4 +216,27 @@ bool valid_name(const std::string& s) {
             return false;
     }
     return true;
+}
+void vardu_ivedimas_random(Studentas& temp){
+    std::vector<std::string> vard = {"Artur", "Simas", "Romas", "Patrikas", "Rokas", "Ignas", "Tomas", "Rugile", "Aiste", "Martynas"};
+    std::vector<std::string> pav = {"Pavardenis1", "Pavardenis2", "Pavardenis3", "Pavardenis4", "Pavardenis5", "Pavardenis6", "Pavardenis7", "Pavardenis8", "Pavardenis9", "Pavardenis10"};
+    std::random_device rd;                 
+    std::mt19937 gen(rd());  
+    std::uniform_int_distribution<> dist(0, 9);
+    int r = dist(gen);
+    temp.vardas = vard[r];
+    temp.pavarde = pav[r];
+}
+void vardu_ivedimas_ranka(Studentas& temp, std::vector<Studentas>& stud){
+    while(true){
+        std::string vardas, pavarde;
+        std::cout << "Koks yra " << stud.size() + 1 << " studento vardas ir pavarde? ";
+        std::cin >> vardas >> pavarde;
+        if(valid_name(vardas) == true && valid_name(pavarde) == true){
+            temp.vardas = vardas;
+            temp.pavarde = pavarde;
+            break;
+        }
+        else std::cout << "Iveskite tinkama varda ir pavarde\n";
+    }
 }
