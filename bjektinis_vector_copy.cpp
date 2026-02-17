@@ -6,6 +6,7 @@
 #include <string>
 #include <stdexcept>
 #include <random>
+#include <cctype>
 
 std::string input;
 
@@ -18,6 +19,7 @@ struct Studentas {
     double med;
 };
 
+bool valid_name(const std::string& s);
 int validation(std::string a);
 void paz_sk(Studentas& temp, int& m);
 void paz_ivestis_ranka(Studentas& temp, int m);
@@ -37,13 +39,28 @@ int main() {
         Studentas temp;
         int last;
         int m;
-        std::cout << "Koks yra " << stud.size() + 1 << " studento vardas ir pavarde? ";
-        std::cin >> temp.vardas >> temp.pavarde;
-        if(temp.vardas.empty() == true || temp.pavarde.empty() == true){
-            std::cout << "Jus neivedet vardo arba pavardet, bandykite per nauja: ";
-            std::cin >> temp.vardas >> temp.pavarde;
-        }
-
+          while(true){
+            std::string vardas, pavarde;
+            std::cout << "Ar studentu vardus ir pavardes norite vesti: ranka - 1, ar sugeneruoti - 2? ";
+            std::cin >> input;
+            if (validation(input) == 1){
+                while(true){
+                    std::cout << "Koks yra " << stud.size() + 1 << " studento vardas ir pavarde? ";
+                    std::cin >> vardas >> pavarde;
+                    if(valid_name(vardas) == true && valid_name(pavarde) == true){
+                        temp.vardas = vardas;
+                        temp.pavarde = pavarde;
+                        break;
+                    }
+                    else std::cout << "Iveskite tinkama varda ir pavarde\n";
+                }
+                break;
+            }
+            else if(validation(input) == 2){ 
+                break;
+            }
+            else std::cout << "Iveskite tinkama sk! ";
+        } 
         while(true){
             std::cout << "Ar studento pazymius norite vesti: ranka - 1, ar sugeneruoti - 2? ";
             std::cin >> input;
@@ -60,8 +77,7 @@ int main() {
                 break;
             }
             else std::cout << "Iveskite tinkama sk! ";
-        }   
-
+        } 
         stud.push_back(temp);
         
         while(true){
@@ -129,17 +145,21 @@ void egz_ivestis_ranka(Studentas& temp){
         }
 }
 void isvestis(std::vector<Studentas>& stud){
-    std::cout << "Ka noretumet pamatyt? Mediana - 1, arba Vidurki - 2 ";
-    int a;
-    std::cin >> a;
-    if(a == 1){
+    while(true){
+        std::cout << "Ka noretumet pamatyt? Mediana - 1, arba Vidurki - 2 ";
+        std::cin >> input;
+        if(validation(input) == 0) std::cout << "Iveskite sk! ";
+        else if(validation(input) != 1 && validation(input) != 2) std::cout << "Iveskite tinkama sk!";
+        else break;
+    }
+    if(validation(input) == 1){
         std::cout << std::fixed << "Vardas" << std::setw(10) << "Pavarde" << std::setw(20) << "Galutinis (Med.)" << std::endl;
         std::cout << "-----------------------------------------------------------------------------------" << std::endl;
         for(int i=0; i<stud.size(); i++){
         std::cout << std::fixed << std::setprecision(2) << stud[i].vardas << std::setw(10) << stud[i].pavarde << std::setw(9) << stud[i].med << std::endl;
         }
     }
-    else{
+    else if(validation(input) == 2){
         std::cout << std::fixed << "Vardas" << std::setw(10) << "Pavarde" << std::setw(20) << "Galutinis (Vid.)" << std::endl;
         std::cout << "-----------------------------------------------------------------------------------" << std::endl;
         for(int i=0; i<stud.size(); i++){
@@ -193,4 +213,14 @@ void egz_ivestis_random(Studentas& temp){
     std::uniform_int_distribution<> dist(1, 10);
     int r = dist(gen);
     temp.egz = r;
+}
+
+bool valid_name(const std::string& s) {
+    if (s.empty()) return false;
+
+    for (unsigned char c : s) {
+        if (!std::isalpha(c) && c != '-') 
+            return false;
+    }
+    return true;
 }
