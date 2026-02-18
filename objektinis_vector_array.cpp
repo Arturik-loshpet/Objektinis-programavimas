@@ -52,7 +52,7 @@ int main() {
                 vardu_ivedimas_random(temp);
                 break;
             }
-            else std::cout << "Iveskite tinkama sk! ";
+            else std::cout << "Iveskite tinkama sk!" <<std::endl;;
         } 
         while(true){
             std::cout << "Ar studento pazymius norite vesti: ranka - 1, ar sugeneruoti - 2? ";
@@ -69,7 +69,7 @@ int main() {
                 egz_ivestis_random(temp);
                 break;
             }
-            else std::cout << "Iveskite tinkama sk! ";
+            else std::cout << "Iveskite tinkama sk!" <<std::endl;;
         } 
         stud.push_back(temp);
         
@@ -141,22 +141,22 @@ void isvestis(std::vector<Studentas>& stud){
     while(true){
         std::cout << "Ka noretumet pamatyt? Mediana - 1, arba Vidurki - 2 ";
         std::cin >> input;
-        if(validation(input) == 0) std::cout << "Iveskite sk! ";
-        else if(validation(input) != 1 && validation(input) != 2) std::cout << "Iveskite tinkama sk!";
+        if(validation(input) == 0) std::cout << "Iveskite sk! " <<std::endl;
+        else if(validation(input) != 1 && validation(input) != 2) std::cout << "Iveskite tinkama sk!"<<std::endl;
         else break;
     }
     if(validation(input) == 1){
-        std::cout << std::fixed << "Vardas" << std::setw(10) << "Pavarde" << std::setw(20) << "Galutinis (Med.)" << std::endl;
+        std::cout << std::left << std::setw(15) << "Vardas" << std::setw(15) << "Pavarde" << std::setw(20) << "Galutinis (Med.)" << std::endl;
         std::cout << "-----------------------------------------------------------------------------------" << std::endl;
         for(int i=0; i<stud.size(); i++){
-        std::cout << std::fixed << std::setprecision(2) << stud[i].vardas << std::setw(10) << stud[i].pavarde << std::setw(9) << stud[i].med << std::endl;
+        std::cout << std::fixed << std::left << std::setw(15) << stud[i].vardas << std::setw(15) << stud[i].pavarde << std::setw(9) << std::setprecision(2) << stud[i].med << std::endl;
         }
     }
     else if(validation(input) == 2){
-        std::cout << std::fixed << "Vardas" << std::setw(10) << "Pavarde" << std::setw(20) << "Galutinis (Vid.)" << std::endl;
+        std::cout << std::left << std::setw(15) << "Vardas" << std::setw(15) << "Pavarde" << std::setw(20) << "Galutinis (Vid.)" << std::endl;
         std::cout << "-----------------------------------------------------------------------------------" << std::endl;
         for(int i=0; i<stud.size(); i++){
-        std::cout << std::fixed << std::setprecision(2) << stud[i].vardas << std::setw(10) << stud[i].pavarde << std::setw(9) << stud[i].vid << std::endl;
+        std::cout << std::fixed << std::left << std::setw(15) << stud[i].vardas << std::setw(15) << stud[i].pavarde << std::setw(9) << std::setprecision(2) << stud[i].vid << std::endl;
         }
     }
 }
