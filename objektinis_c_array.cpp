@@ -8,6 +8,8 @@
 #include <random>
 #include <cctype>
 
+//Padaryti dinamini masyva main funkcijoj ir meniu pagal salygsa.
+
 std::string input;
 int n = 0;
 const int MAX = 100;
