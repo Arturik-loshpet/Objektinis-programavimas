@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <random>
 #include <cctype>
+#include <fstream>
+#include <sstream>
 
 std::string input;
 
@@ -18,6 +20,8 @@ struct Studentas {
     double vid;
     double med;
 };
+
+int n=0;
 
 bool valid_name(const std::string& s);
 int validation(std::string a);
@@ -31,6 +35,7 @@ void mediana(std::vector<Studentas>& stud);
 void isvestis(std::vector<Studentas>& stud);
 void vardu_ivedimas_random(Studentas& temp);
 void vardu_ivedimas_ranka(Studentas& temp, std::vector<Studentas>& stud);
+void skaitymas(Studentas& temp, std::vector<Studentas>& stud);
 
 
 int main() {
@@ -42,7 +47,7 @@ int main() {
         int last;
         int m;
           while(true){
-            std::cout << "1 - ranką, 2 - generuoti tik pažymius, 3 - generuoti studentų vardus, pavardės ir pažymius, 4 - baigti darbą: ";
+            std::cout << "1 - ranką, 2 - generuoti tik pažymius, 3 - generuoti studentų vardus, pavardės ir pažymius, 4 - skaityti duomenis is failo, 5 - baigti darbą: ";
             std::cin >> input;
             if (validation(input) == 1){
                 vardu_ivedimas_ranka(temp, stud);
@@ -67,6 +72,10 @@ int main() {
 
             }
             else if(validation(input) == 4){
+                skaitymas(temp, stud);
+                break;
+            }
+            else if(validation(input) == 5){
                 std::cout << "Sekmingai baigete studentu duomenu ivedima! " <<std::endl;
                 break;
             }
@@ -230,4 +239,27 @@ void vardu_ivedimas_ranka(Studentas& temp, std::vector<Studentas>& stud){
         }
         else std::cout << "Iveskite tinkama varda ir pavarde\n";
     }
+}
+void skaitymas(Studentas& temp, std::vector<Studentas>& stud){
+    std::string line;
+    int paz;
+    std::ifstream duomfailas("studentai10000.txt");
+    if (!duomfailas.is_open()) {
+        std::cout << "Nepavyko atidaryti failo! " << std::endl;
+        return;
+    }
+    std::getline(duomfailas, line);
+    while(!duomfailas.eof()){
+        Studentas temp;
+        std::getline(duomfailas, line);
+        std::istringstream laik(line);
+        laik >> temp.vardas >> temp.pavarde;
+        while(laik >> paz){
+            temp.paz.push_back(paz);
+        }
+        temp.egz = temp.paz.back();
+        temp.paz.pop_back();
+        stud.push_back(temp);
+    }
+    duomfailas.close();
 }
