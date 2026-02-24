@@ -8,11 +8,8 @@
 #include <random>
 #include <cctype>
 
-//Padaryti dinamini masyva main funkcijoj ir meniu pagal salygsa.
-
 std::string input;
 int n = 0;
-const int MAX = 100;
 
 struct Studentas {
     std::string vardas;
@@ -38,67 +35,72 @@ void vidurkis(Studentas stud[], int n);
 void isvestis(Studentas stud[], int n);
 
 int main(){
-    Studentas stud[MAX];
+    Studentas* stud = nullptr;
     std::cout << "Studentu Vardu ir pazymiu ivedimu sistema, skirta medianos bei vidurkio apskaiciavimui" << std::endl;
+    bool baigti = false;
     while(true){
         Studentas temp;
-        int last;
         int m;
         while(true){
-            std::cout << "Ar studentu vardus ir pavardes norite vesti: ranka - 1, ar sugeneruoti - 2? ";
+            std::cout << "1 - ranką, 2 - generuoti tik pažymius, 3 - generuoti studentų vardus, pavardės ir pažymius, 4 - baigti darbą: ";
             std::cin >> input;
             if (validation(input) == 1){
                 vardu_ivedimas_ranka(temp);
-                break;
-            }
-            else if(validation(input) == 2){ 
-                vardu_ivedimas_random(temp);
-                break;
-            }
-            else std::cout << "Iveskite tinkama sk! " << std::endl;
-        }
-        while(true){
-            std::cout << "Ar studento pazymius norite vesti: ranka - 1, ar sugeneruoti - 2? ";
-            std::cin >> input;
-            if (validation(input) == 1){
-                paz_sk(temp, m);
+                paz_sk(temp,m);
                 temp.paz_sk = m;
-                temp.paz = new int[m]; 
+                temp.paz = new int[m];
                 paz_ivestis_ranka(temp);
                 egz_ivestis_ranka(temp);
                 break;
             }
-            else if(validation(input) == 2){ 
+            else if(validation(input) == 2){
+                vardu_ivedimas_ranka(temp);
                 paz_sk(temp, m);
                 temp.paz_sk = m;
-                temp.paz = new int[m]; 
+                temp.paz = new int[m];
                 paz_ivestis_random(temp);
                 egz_ivestis_random(temp);
                 break;
             }
+            else if(validation(input) == 3){
+                vardu_ivedimas_random(temp);
+                paz_sk(temp, m);
+                temp.paz_sk = m;
+                temp.paz = new int[m];
+                paz_ivestis_random(temp);
+                egz_ivestis_random(temp);
+                break;
+
+            }
+            else if(validation(input) == 4){
+                std::cout << "Sekmingai baigete studentu duomenu ivedima! " <<std::endl;
+                baigti = true;
+                break;
+            }
             else std::cout << "Iveskite tinkama sk! " << std::endl;
         }
-        if (n >= MAX) {
-            std::cout << "Per daug studentu (max " << MAX << ")" << std::endl;
-            break;
+        if (baigti) break;
+
+        Studentas* naujas_stud = new Studentas[n + 1];
+        for (int i = 0; i < n; i++) {
+            naujas_stud[i] = stud[i];
         }
-        stud[n] = temp;
+        naujas_stud[n] = temp;
+        delete[] stud;
+        stud = naujas_stud;
         n++;
-        while(true){
-            std::cout << "Ar norite ivesti dar vieno studento duomenis? 1 - taip. 2 - ne: ";
-            std::cin >> input;
-            last = validation(input);
-            if (last != 1 && last != 2) std::cout << "Iveskite tinkama sk! " << std::endl;
-            else if(last == 2 || last == 1) break;
-        }
-        if(last == 2) break;
     }
 
-    vidurkis(stud, n);
-    mediana(stud, n );
-    isvestis(stud, n);
+    if (n > 0) {
+        vidurkis(stud, n);
+        mediana(stud, n);
+        isvestis(stud, n);
+    } else {
+        std::cout << "Studentu duomenu nera." << std::endl;
+    }
 
     for (int i = 0; i < n; i++) delete[] stud[i].paz;
+    delete[] stud;
 }
 
 int validation(std::string a){
@@ -108,6 +110,9 @@ int validation(std::string a){
         return b;
     }
     catch (std::invalid_argument&){
+        return 0;
+    }
+    catch (std::out_of_range&){
         return 0;
     }
 }

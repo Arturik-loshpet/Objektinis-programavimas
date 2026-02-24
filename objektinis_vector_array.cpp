@@ -42,46 +42,37 @@ int main() {
         int last;
         int m;
           while(true){
-            std::cout << "Ar studentu vardus ir pavardes norite vesti: ranka - 1, ar sugeneruoti - 2? ";
+            std::cout << "1 - ranką, 2 - generuoti tik pažymius, 3 - generuoti studentų vardus, pavardės ir pažymius, 4 - baigti darbą: ";
             std::cin >> input;
             if (validation(input) == 1){
                 vardu_ivedimas_ranka(temp, stud);
-                break;
-            }
-            else if(validation(input) == 2){ 
-                vardu_ivedimas_random(temp);
-                break;
-            }
-            else std::cout << "Iveskite tinkama sk!" <<std::endl;;
-        } 
-        while(true){
-            std::cout << "Ar studento pazymius norite vesti: ranka - 1, ar sugeneruoti - 2? ";
-            std::cin >> input;
-            if (validation(input) == 1){
-                paz_sk(temp, m);
+                paz_sk(temp,m);
                 paz_ivestis_ranka(temp, m);
                 egz_ivestis_ranka(temp);
-                break;
+                stud.push_back(temp);
             }
-            else if(validation(input) == 2){ 
+            else if(validation(input) == 2){
+                vardu_ivedimas_ranka(temp, stud);
                 paz_sk(temp, m);
                 paz_ivestis_random(temp, m);
                 egz_ivestis_random(temp);
+                stud.push_back(temp);
+            }
+            else if(validation(input) == 3){
+                vardu_ivedimas_random(temp);
+                paz_sk(temp, m);
+                paz_ivestis_random(temp, m);
+                egz_ivestis_random(temp);
+                stud.push_back(temp);
+
+            }
+            else if(validation(input) == 4){
+                std::cout << "Sekmingai baigete studentu duomenu ivedima! " <<std::endl;
                 break;
             }
-            else std::cout << "Iveskite tinkama sk!" <<std::endl;;
-        } 
-        stud.push_back(temp);
-        
-        while(true){
-            std::cout << "Ar norite ivesti dar vieno studento duomenis? 1 - taip. 2 - ne: ";
-            std::cin >> input;
-            last = validation(input);
-            if (last != 1 && last != 2) std::cout << "Iveskite tinkama sk! " << std::endl;
-            else if(last == 2 || last == 1) break;
+            else std::cout << "Iveskite tinkama sk! " << std::endl;
         }
-        if(last == 2) break;
-        else if (last == 1) continue;
+        break;
     }
 
     vidurkis(stud);
