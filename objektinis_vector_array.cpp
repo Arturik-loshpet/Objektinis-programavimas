@@ -36,6 +36,8 @@ void isvestis(std::vector<Studentas>& stud);
 void vardu_ivedimas_random(Studentas& temp);
 void vardu_ivedimas_ranka(Studentas& temp, std::vector<Studentas>& stud);
 void skaitymas(Studentas& temp, std::vector<Studentas>& stud);
+void rusiavimas(std::vector<Studentas>& stud);
+void isvestis_failas(std::vector<Studentas>& stud);
 
 
 int main() {
@@ -83,9 +85,11 @@ int main() {
         }
         break;
     }
-
     vidurkis(stud);
     mediana(stud);
+    if(validation(input) == 4){
+        rusiavimas(stud);
+    }
     isvestis(stud);
 }
 void paz_sk(Studentas& temp, int& m){
@@ -262,4 +266,57 @@ void skaitymas(Studentas& temp, std::vector<Studentas>& stud){
         stud.push_back(temp);
     }
     duomfailas.close();
+}
+void rusiavimas(std::vector<Studentas>& stud){
+    while(true){
+        std::cout << "Rusiuokite studentus pagal: 1 - varda, 2 - pavarde, 3 - vidurki, 4 - mediana";
+        std::cin >> input;
+        if(validation(input) == 1){
+            std::sort(stud.begin(), stud.end(), [](const Studentas& a, const Studentas& b) {
+            return a.vardas < b.vardas;
+            });
+            break;
+        }
+        else if(validation(input) == 2){
+            std::sort(stud.begin(), stud.end(), [](const Studentas& a, const Studentas& b) {
+            return a.pavarde < b.pavarde;
+            });
+            break;
+        }
+        else if(validation(input) == 3){
+            std::sort(stud.begin(), stud.end(), [](const Studentas& a, const Studentas& b) {
+            return a.vid < b.vid;
+            });
+            break;
+        }
+        else if(validation(input) == 4){
+            std::sort(stud.begin(), stud.end(), [](const Studentas& a, const Studentas& b) {
+            return a.med < b.med;
+            });
+            break;
+        }
+        else std::cout << "Ivesktie tinkama sk!";  
+    }
+}
+void isvestis_failas(std::vector<Studentas>& stud){
+    while(true){
+        std::cout << "Duomenis rasyti: 1 - i konsole, 2 - i atskira faila: ";
+        std::cin >> input;
+        if(validation(input) == 1){
+                std::cout << std::left << std::setw(15) << "Vardas" << std::setw(15) << "Pavarde" << std::setw(20) << "Galutinis (Vid.)"  << std::setw(10) << "Galutinis (Med.)" << std::endl;
+                std::cout << "-----------------------------------------------------------------------------------" << std::endl;
+                for(int i=0; i<stud.size(); i++){
+                std::cout << std::fixed << std::left << std::setw(15) << stud[i].vardas << std::setw(15) << stud[i].pavarde << std::setw(9) << std::setprecision(2) << stud[i].vid <<  std::setw(9) << stud[i].med << std::endl;
+                }
+            }
+        if(validation(input) == 2){
+            std::ofstream rezfailas("rezultatai.txt");
+                rezfailas << std::left << std::setw(15) << "Vardas" << std::setw(15) << "Pavarde" << std::setw(20) << "Galutinis (Vid.)"  << std::setw(10) << "Galutinis (Med.)" << std::endl;
+                rezfailas << "-----------------------------------------------------------------------------------" << std::endl;
+                for(int i=0; i<stud.size(); i++){
+                rezfailas << std::fixed << std::left << std::setw(15) << stud[i].vardas << std::setw(15) << stud[i].pavarde << std::setw(9) << std::setprecision(2) << stud[i].vid <<  std::setw(9) << stud[i].med << std::endl;
+                }
+                rezfailas.close();
+            }
+    }
 }
