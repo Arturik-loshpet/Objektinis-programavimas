@@ -89,6 +89,7 @@ int main() {
     mediana(stud);
     if(validation(input) == 4){
         rusiavimas(stud);
+        isvestis_failas(stud);
     }
     isvestis(stud);
 }
@@ -308,7 +309,8 @@ void isvestis_failas(std::vector<Studentas>& stud){
                 for(int i=0; i<stud.size(); i++){
                 std::cout << std::fixed << std::left << std::setw(15) << stud[i].vardas << std::setw(15) << stud[i].pavarde << std::setw(9) << std::setprecision(2) << stud[i].vid <<  std::setw(9) << stud[i].med << std::endl;
                 }
-            }
+                break;
+        }
         if(validation(input) == 2){
             std::ofstream rezfailas("rezultatai.txt");
                 rezfailas << std::left << std::setw(15) << "Vardas" << std::setw(15) << "Pavarde" << std::setw(20) << "Galutinis (Vid.)"  << std::setw(10) << "Galutinis (Med.)" << std::endl;
@@ -317,6 +319,8 @@ void isvestis_failas(std::vector<Studentas>& stud){
                 rezfailas << std::fixed << std::left << std::setw(15) << stud[i].vardas << std::setw(15) << stud[i].pavarde << std::setw(9) << std::setprecision(2) << stud[i].vid <<  std::setw(9) << stud[i].med << std::endl;
                 }
                 rezfailas.close();
-            }
+                break;
+        }
+        break;
     }
 }
