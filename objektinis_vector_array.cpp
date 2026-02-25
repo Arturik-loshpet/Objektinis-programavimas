@@ -250,7 +250,7 @@ void skaitymas(Studentas& temp, std::vector<Studentas>& stud){
     std::string line;
     int paz;
     auto pradzia = std::chrono::high_resolution_clock::now();
-    std::ifstream duomfailas("studentai10000.txt");
+    std::ifstream duomfailas("studentai1000000.txt");
     if (!duomfailas.is_open()) {
         std::cout << "Nepavyko atidaryti failo! " << std::endl;
         return;
