@@ -9,6 +9,7 @@
 #include <cctype>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 
 std::string input;
 
@@ -91,7 +92,7 @@ int main() {
         rusiavimas(stud);
         isvestis_failas(stud);
     }
-    isvestis(stud);
+    else isvestis(stud);
 }
 void paz_sk(Studentas& temp, int& m){
     while(true){
@@ -248,6 +249,7 @@ void vardu_ivedimas_ranka(Studentas& temp, std::vector<Studentas>& stud){
 void skaitymas(Studentas& temp, std::vector<Studentas>& stud){
     std::string line;
     int paz;
+    auto pradzia = std::chrono::high_resolution_clock::now();
     std::ifstream duomfailas("studentai10000.txt");
     if (!duomfailas.is_open()) {
         std::cout << "Nepavyko atidaryti failo! " << std::endl;
@@ -267,10 +269,13 @@ void skaitymas(Studentas& temp, std::vector<Studentas>& stud){
         stud.push_back(temp);
     }
     duomfailas.close();
+    auto pabaiga = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
+    std::cout << "Skaitymas uztruko " << trukme.count() << " ms" << std::endl;
 }
 void rusiavimas(std::vector<Studentas>& stud){
     while(true){
-        std::cout << "Rusiuokite studentus pagal: 1 - varda, 2 - pavarde, 3 - vidurki, 4 - mediana";
+        std::cout << "Rusiuokite studentus pagal: 1 - varda, 2 - pavarde, 3 - vidurki, 4 - mediana ";
         std::cin >> input;
         if(validation(input) == 1){
             std::sort(stud.begin(), stud.end(), [](const Studentas& a, const Studentas& b) {
