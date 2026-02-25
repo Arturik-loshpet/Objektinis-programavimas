@@ -255,10 +255,12 @@ void skaitymas(Studentas& temp, std::vector<Studentas>& stud){
         std::cout << "Nepavyko atidaryti failo! " << std::endl;
         return;
     }
-    std::getline(duomfailas, line);
-    while(!duomfailas.eof()){
+    std::stringstream buffer;
+    buffer << duomfailas.rdbuf(); 
+
+    std::getline(buffer, line);
+    while(std::getline(buffer, line)){
         Studentas temp;
-        std::getline(duomfailas, line);
         std::istringstream laik(line);
         laik >> temp.vardas >> temp.pavarde;
         while(laik >> paz){
