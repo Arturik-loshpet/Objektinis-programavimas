@@ -199,10 +199,10 @@ int validation(std::string a){
 }
 void paz_ivestis_random(Studentas& temp, int m){
     std::random_device rd;                 
-    std::mt19937 gen(rd());  
+    std::mt19937 gen(rd());  //mt - varyklis, rd - seed;
     std::uniform_int_distribution<> dist(1, 10);
     for(int i = 0; i<m; i++){
-        int r = dist(gen);
+        int r = dist(gen); //run engine, throug hdistribution
         temp.paz.push_back(r);
     }
 }
