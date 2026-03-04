@@ -8,9 +8,8 @@
 #include <algorithm>
 #include <string>
 
-std::string input;
-
 void paz_sk(Studentas& temp, int& m){
+    std::string input;
     while(true){
             std::cout << "Kiek pazymiu turi " << temp.vardas << " " <<temp.pavarde << "? ";
             std::cin >> input;
@@ -22,6 +21,7 @@ void paz_sk(Studentas& temp, int& m){
 }
 
 void paz_ivestis_ranka(Studentas& temp, int m){
+    std::string input;
     for(int j=0; j<m; j++){
             int pazymis;
             std::cout << "Iveskite " << j+1 << " pazymi: ";
@@ -42,6 +42,7 @@ void paz_ivestis_ranka(Studentas& temp, int m){
 }
 
 void egz_ivestis_ranka(Studentas& temp){
+    std::string input;
     while(true){
             std::cout << "Koks yra " << temp.vardas << " " <<temp.pavarde << " egzamino rezultatas? ";
             int egz;
@@ -63,6 +64,7 @@ void egz_ivestis_ranka(Studentas& temp){
 }
 
 void isvestis(std::vector<Studentas>& stud){
+    std::string input;
     while(true){
         std::cout << "Ka noretumet pamatyt? Mediana - 1, arba Vidurki - 2 ";
         std::cin >> input;
@@ -131,6 +133,7 @@ void skaitymas(Studentas& temp, std::vector<Studentas>& stud){
 }
 
 void rusiavimas(std::vector<Studentas>& stud){
+    std::string input;
     while(true){
         std::cout << "Rusiuokite studentus pagal: 1 - varda, 2 - pavarde, 3 - vidurki, 4 - mediana ";
         std::cin >> input;
@@ -163,6 +166,7 @@ void rusiavimas(std::vector<Studentas>& stud){
 }
 
 void isvestis_failas(std::vector<Studentas>& stud){
+    std::string input;
     while(true){
         std::cout << "Duomenis rasyti: 1 - i konsole, 2 - i atskira faila: ";
         std::cin >> input;
