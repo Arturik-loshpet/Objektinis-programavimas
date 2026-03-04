@@ -12,6 +12,7 @@
 #include <chrono>
 #include "objektinis.h"
 
+//pizda
 int main() {
 
     std::vector<Studentas> stud;
