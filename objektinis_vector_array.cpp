@@ -22,8 +22,6 @@ struct Studentas {
     double med;
 };
 
-int n=0;
-
 bool valid_name(const std::string& s);
 int validation(std::string a);
 void paz_sk(Studentas& temp, int& m);
