@@ -77,3 +77,4 @@ void vardu_ivedimas_random(Studentas& temp){
     temp.vardas = vard[r];
     temp.pavarde = pav[r];
 }
+
