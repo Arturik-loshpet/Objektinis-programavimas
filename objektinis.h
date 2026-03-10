@@ -33,7 +33,7 @@ void mediana(std::vector<Studentas>& stud);
 void isvestis(std::vector<Studentas>& stud);
 
 //darbas zu failais
-void skaitymas(Studentas& temp, std::vector<Studentas>& stud);
+void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite);
 void rusiavimas(std::vector<Studentas>& stud);
 void isvestis_failas(std::vector<Studentas>& stud);
 

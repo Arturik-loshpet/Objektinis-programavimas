@@ -7,6 +7,9 @@
 #include <sstream>
 #include <algorithm>
 #include <string>
+#include <filesystem>
+
+bool nuskaite;
 
 void paz_sk(Studentas& temp, int& m){
     std::string input;
@@ -102,15 +105,36 @@ void vardu_ivedimas_ranka(Studentas& temp, std::vector<Studentas>& stud){
     }
 }
 
-void skaitymas(Studentas& temp, std::vector<Studentas>& stud){
+void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite){
+    std::string input;
     std::string line;
     int paz;
+    nuskaite = true;
+
+    for (const auto& entry : std::filesystem::directory_iterator(".")) {
+        auto name = entry.path().filename().string();
+        if (entry.is_regular_file() && entry.path().extension() == ".txt" && name != "rezultatai.txt") {
+            std::cout << entry.path().filename() << std::endl;
+        }
+
+    }
+
+    std::cout << "Koki faila noretumete nuskaityti? " << std::endl;
+    std::cin >> input;
     auto pradzia = std::chrono::high_resolution_clock::now();
-    std::ifstream duomfailas("studentai1000000.txt");
+    std::ifstream duomfailas(input);
     if (!duomfailas.is_open()) {
         std::cout << "Nepavyko atidaryti failo! " << std::endl;
+        nuskaite = false;
         return;
     }
+    
+    if (duomfailas.peek() == std::ifstream::traits_type::eof()) {
+    std::cout << "Failas tuscias!" << std::endl;
+    nuskaite = false;
+    return;
+    }
+
     std::stringstream buffer;
     buffer << duomfailas.rdbuf(); 
 

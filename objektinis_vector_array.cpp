@@ -16,6 +16,7 @@ int main() {
 
     std::vector<Studentas> stud;
     std::string input;
+    bool nuskaite;
     std::cout << "Studentu Vardu ir pazymiu ivedimu sistema, skirta medianos bei vidurkio apskaiciavimui" << std::endl;
     while(true){
         Studentas temp;
@@ -47,8 +48,9 @@ int main() {
 
             }
             else if(validation(input) == 4){
-                skaitymas(temp, stud);
-                break;
+                skaitymas(temp, stud, nuskaite);
+                if(nuskaite == true) break;
+                else std::cout << "Parinkite kita faila arba veskite duomenis" << std::endl;
             }
             else if(validation(input) == 5){
                 std::cout << "Sekmingai baigete studentu duomenu ivedima! " <<std::endl;
