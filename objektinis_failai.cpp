@@ -23,9 +23,9 @@ void failu_kurimas(std::string name, int zmones, int m, double& laikas){
     std::ofstream failas(name);
     failas << "vardas pavarde ";
     for(int i=0; i<m; i++){
-        failas << "ND" << i+1;
+        failas << " ND" << i+1;
     }
-    failas << "egz" << std::endl;
+    failas << " egz" << std::endl;
     for(int i=0; i<zmones; i++){
         failas << "vardas" << i+1 << " pavarde" << i+1;
         for(int j=0; j<m; j++){
@@ -149,6 +149,6 @@ void uzd_4(std::vector<Studentas>& stud, std::vector<Studentas>& maladiec, std::
     skirstymas(stud, maladiec, lopai, laikas);
     rasymas(maladiec, "maladiec.txt", laikas);
     rasymas(lopai, "lopai.txt", laikas);
-    std::cout << "Darkas su failu uztruko " << laikas << " ms" <<std::endl;
+    std::cout << "Darbas su failu uztruko " << laikas << " ms" <<std::endl;
     std::cout << std::endl;
 }
