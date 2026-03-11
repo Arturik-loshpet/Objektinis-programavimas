@@ -12,7 +12,7 @@
 
 bool nuskaite;
 
-void failu_kurimas(std::string name, int zmones, int m){
+void failu_kurimas(std::string name, int zmones, int m, double& laikas){
     std::string input;
     std::random_device rd;                 
     std::mt19937 gen(rd());
@@ -38,7 +38,7 @@ void failu_kurimas(std::string name, int zmones, int m){
     auto pabaiga = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
     std::cout << zmones << " Rasymas uztruko " << trukme.count() << " ms" << std::endl;
-
+    laikas += trukme.count();
     failas.close();
 }
 
@@ -69,7 +69,7 @@ void isvestis_failas(std::vector<Studentas>& stud){
     }
 }
 
-void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite, std::string input){
+void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite, std::string input, double& laikas){
     std::string line;
     int paz;
     nuskaite = true;
@@ -106,8 +106,9 @@ void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite, st
     auto pabaiga = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
     std::cout << "Skaitymas failo " << input <<" uztruko " << trukme.count() << " ms" << std::endl;
+    laikas += trukme.count();
 }
-void skirstymas(std::vector<Studentas>& stud, std::vector<Studentas>& maladiec, std::vector<Studentas>& lopai){
+void skirstymas(std::vector<Studentas>& stud, std::vector<Studentas>& maladiec, std::vector<Studentas>& lopai, double& laikas){
     auto pradzia = std::chrono::high_resolution_clock::now();
     for(int i=0; i<stud.size(); i++){
         Studentas temp;
@@ -123,9 +124,10 @@ void skirstymas(std::vector<Studentas>& stud, std::vector<Studentas>& maladiec, 
     auto pabaiga = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
     std::cout << "Skirstymas i 2 masyvus truko " << trukme.count() << " ms" << std::endl;
+    laikas += trukme.count();
 }
 
-void rasymas(std::vector<Studentas> a, std::string name){
+void rasymas(std::vector<Studentas> a, std::string name, double& laikas){
     auto pradzia = std::chrono::high_resolution_clock::now();
 
     std::ofstream rezfailas(name);
@@ -138,5 +140,15 @@ void rasymas(std::vector<Studentas> a, std::string name){
     auto pabaiga = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
     std::cout << name << " Rasymas truko " << trukme.count() << " ms" << std::endl;
-
+    laikas += trukme.count();
+}
+void uzd_4(std::vector<Studentas>& stud, std::vector<Studentas>& maladiec, std::vector<Studentas>& lopai, double& laikas){
+    vidurkis(stud);
+    mediana(stud);
+    rusiavimas(stud, laikas);
+    skirstymas(stud, maladiec, lopai, laikas);
+    rasymas(maladiec, "maladiec.txt", laikas);
+    rasymas(lopai, "lopai.txt", laikas);
+    std::cout << "Darkas su failu uztruko " << laikas << " ms" <<std::endl;
+    std::cout << std::endl;
 }

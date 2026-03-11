@@ -105,7 +105,7 @@ void vardu_ivedimas_ranka(Studentas& temp, std::vector<Studentas>& stud){
 }
 
 
-void rusiavimas(std::vector<Studentas>& stud){
+void rusiavimas(std::vector<Studentas>& stud, double& laikas){
     std::string input;
     while(true){
         std::cout << "Rusiuokite studentus pagal: 1 - varda, 2 - pavarde, 3 - vidurki, 4 - mediana ";
@@ -141,7 +141,7 @@ void rusiavimas(std::vector<Studentas>& stud){
 
         auto pabaiga = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
-        std::cout << "Rusiavimas truko " << trukme.count() << " ms" << std::endl;
+        laikas += trukme.count();
     }
 }
 int paz_sk(){

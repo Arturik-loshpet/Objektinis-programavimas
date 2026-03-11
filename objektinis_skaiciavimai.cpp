@@ -78,3 +78,4 @@ void vardu_ivedimas_random(Studentas& temp){
     temp.pavarde = pav[r];
 }
 
+
