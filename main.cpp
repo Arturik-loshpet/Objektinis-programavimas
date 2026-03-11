@@ -130,4 +130,4 @@ int main() {
         isvestis_failas(stud);
     }
 }
-//
+
