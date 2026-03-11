@@ -129,4 +129,4 @@ int main() {
         if (stud.size() > 1) rusiavimas(stud, b);
         isvestis_failas(stud);
     }
-}//
+}
