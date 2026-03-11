@@ -21,6 +21,7 @@ void paz_sk(Studentas& temp, int& m);
 void paz_ivestis_ranka(Studentas& temp, int m);
 void egz_ivestis_ranka(Studentas& temp);
 void vardu_ivedimas_ranka(Studentas& temp, std::vector<Studentas>& stud);
+int paz_sk();
 
 //randominis generavimas
 void paz_ivestis_random(Studentas& temp, int m);
@@ -36,5 +37,6 @@ void isvestis(std::vector<Studentas>& stud);
 void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite);
 void rusiavimas(std::vector<Studentas>& stud);
 void isvestis_failas(std::vector<Studentas>& stud);
+void failu_kurimas(std::string name, int zmones, int m);
 
 #endif

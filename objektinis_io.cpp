@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <string>
 #include <filesystem>
+#include <random>
 
 bool nuskaite;
 
@@ -128,7 +129,7 @@ void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite){
         nuskaite = false;
         return;
     }
-    
+
     if (duomfailas.peek() == std::ifstream::traits_type::eof()) {
     std::cout << "Failas tuscias!" << std::endl;
     nuskaite = false;
@@ -153,7 +154,7 @@ void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite){
     duomfailas.close();
     auto pabaiga = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
-    std::cout << "Skaitymas uztruko " << trukme.count() << " ms" << std::endl;
+    std::cout << "Skaitymas failo " << input <<" uztruko " << trukme.count() << " ms" << std::endl;
 }
 
 void rusiavimas(std::vector<Studentas>& stud){
@@ -214,4 +215,46 @@ void isvestis_failas(std::vector<Studentas>& stud){
         }
         break;
     }
+}
+void failu_kurimas(std::string name, int zmones, int m){
+    std::string input;
+    std::random_device rd;                 
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(1, 10);
+
+    auto pradzia = std::chrono::high_resolution_clock::now();
+
+    std::ofstream failas(name);
+    failas << "vardas pavarde ";
+    for(int i=0; i<m; i++){
+        failas << "ND" << i+1;
+    }
+    failas << "egz" << std::endl;
+    for(int i=0; i<zmones; i++){
+        failas << "vardas" << i+1 << " pavarde" << i+1;
+        for(int j=0; j<m; j++){
+            int r = dist(gen);
+            failas << " " << r;
+        }
+        failas << " " << dist(gen) << std::endl;
+    }
+
+    auto pabaiga = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
+    std::cout << zmones << " Rasymas uztruko " << trukme.count() << " ms" << std::endl;
+
+    failas.close();
+}
+
+int paz_sk(){
+    std::string input;
+    int pazsk;
+    while(true){
+        std::cout << "Kiek pazymiu tures studentai sarase? ";
+        std::cin >> input;
+        pazsk = validation(input);
+        if(pazsk > 0) break;
+        else std::cout << "iveskite tinkama sk! " << std::endl;
+    }
+    return pazsk;
 }

@@ -16,14 +16,14 @@ int main() {
 
     std::vector<Studentas> stud;
     std::string input;
-    bool nuskaite;
+    bool nuskaite=true;
     std::cout << "Studentu Vardu ir pazymiu ivedimu sistema, skirta medianos bei vidurkio apskaiciavimui" << std::endl;
     while(true){
         Studentas temp;
         int last;
         int m;
           while(true){
-            std::cout << "1 - ranką, 2 - generuoti tik pažymius, 3 - generuoti studentų vardus, pavardės ir pažymius, 4 - skaityti duomenis is failo, 5 - baigti darbą: ";
+            std::cout << "1 - ranką, 2 - generuoti tik pažymius, 3 - generuoti studentų vardus, pavardės ir pažymius, 4 - skaityti duomenis is failo, 5 - generuoti failus, 6 - baigti darbą: ";
             std::cin >> input;
             if (validation(input) == 1){
                 vardu_ivedimas_ranka(temp, stud);
@@ -53,6 +53,15 @@ int main() {
                 else std::cout << "Parinkite kita faila arba veskite duomenis" << std::endl;
             }
             else if(validation(input) == 5){
+                m = paz_sk();
+                failu_kurimas("studentai1000.txt", 1000, m);
+                failu_kurimas("studentai10000.txt", 10000, m);
+                failu_kurimas("studentai100000.txt", 100000, m);
+                failu_kurimas("studentai1000000.txt", 1000000, m);
+                failu_kurimas("studentai10000000.txt", 10000000, m);
+                break;
+            }
+            else if(validation(input) == 6){
                 std::cout << "Sekmingai baigete studentu duomenu ivedima! " <<std::endl;
                 break;
             }
@@ -62,9 +71,9 @@ int main() {
     }
     vidurkis(stud);
     mediana(stud);
-    if(validation(input) == 4){
-        rusiavimas(stud);
-        isvestis_failas(stud);
+    if(validation(input) == 5){
+        
     }
-    else isvestis(stud);
+    rusiavimas(stud);
+    isvestis_failas(stud);
 }
