@@ -10,8 +10,6 @@
 #include <filesystem>
 #include <random>
 
-bool nuskaite;
-
 void paz_sk(Studentas& temp, int& m){
     std::string input;
     while(true){
@@ -112,6 +110,9 @@ void rusiavimas(std::vector<Studentas>& stud){
     while(true){
         std::cout << "Rusiuokite studentus pagal: 1 - varda, 2 - pavarde, 3 - vidurki, 4 - mediana ";
         std::cin >> input;
+
+        auto pradzia = std::chrono::high_resolution_clock::now();
+
         if(validation(input) == 1){
             std::sort(stud.begin(), stud.end(), [](const Studentas& a, const Studentas& b) {
             return a.vardas < b.vardas;
@@ -137,6 +138,10 @@ void rusiavimas(std::vector<Studentas>& stud){
             break;
         }
         else std::cout << "Ivesktie tinkama sk!";  
+
+        auto pabaiga = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
+        std::cout << "Rusiavimas truko " << trukme.count() << " ms" << std::endl;
     }
 }
 int paz_sk(){

@@ -34,9 +34,11 @@ void mediana(std::vector<Studentas>& stud);
 void isvestis(std::vector<Studentas>& stud);
 
 //darbas zu failais
-void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite);
+void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite, std::string input);
 void rusiavimas(std::vector<Studentas>& stud);
 void isvestis_failas(std::vector<Studentas>& stud);
 void failu_kurimas(std::string name, int zmones, int m);
+void rasymas(std::vector<Studentas> a, std::string name);
+void skirstymas(std::vector<Studentas>& stud, std::vector<Studentas>& maladiec, std::vector<Studentas>& lopai);
 
 #endif

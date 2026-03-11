@@ -69,22 +69,10 @@ void isvestis_failas(std::vector<Studentas>& stud){
     }
 }
 
-void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite){
-    std::string input;
+void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite, std::string input){
     std::string line;
     int paz;
     nuskaite = true;
-
-    for (const auto& entry : std::filesystem::directory_iterator(".")) {
-        auto name = entry.path().filename().string();
-        if (entry.is_regular_file() && entry.path().extension() == ".txt" && name != "rezultatai.txt") {
-            std::cout << entry.path().filename() << std::endl;
-        }
-
-    }
-
-    std::cout << "Koki faila noretumete nuskaityti? " << std::endl;
-    std::cin >> input;
     auto pradzia = std::chrono::high_resolution_clock::now();
     std::ifstream duomfailas(input);
     if (!duomfailas.is_open()) {
@@ -118,4 +106,37 @@ void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite){
     auto pabaiga = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
     std::cout << "Skaitymas failo " << input <<" uztruko " << trukme.count() << " ms" << std::endl;
+}
+void skirstymas(std::vector<Studentas>& stud, std::vector<Studentas>& maladiec, std::vector<Studentas>& lopai){
+    auto pradzia = std::chrono::high_resolution_clock::now();
+    for(int i=0; i<stud.size(); i++){
+        Studentas temp;
+        temp = stud[i];
+        if(temp.vid < 5){
+            lopai.push_back(temp);
+        }
+        else{
+            maladiec.push_back(temp);
+        }
+    }
+    stud.clear();
+    auto pabaiga = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
+    std::cout << "Skirstymas i 2 masyvus truko " << trukme.count() << " ms" << std::endl;
+}
+
+void rasymas(std::vector<Studentas> a, std::string name){
+    auto pradzia = std::chrono::high_resolution_clock::now();
+
+    std::ofstream rezfailas(name);
+    rezfailas << std::left << std::setw(15) << "Vardas" << std::setw(15) << "Pavarde" << std::setw(20) << "Galutinis (Vid.)"  << std::setw(10) << "Galutinis (Med.)" << std::endl;
+    rezfailas << "-----------------------------------------------------------------------------------" << std::endl;
+    for(int i=0; i<a.size(); i++){
+        rezfailas << std::fixed << std::left << std::setw(15) << a[i].vardas << std::setw(15) << a[i].pavarde << std::setw(9) << std::setprecision(2) << a[i].vid <<  std::setw(9) << a[i].med << std::endl;               
+    }
+    rezfailas.close();
+    auto pabaiga = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
+    std::cout << name << " Rasymas truko " << trukme.count() << " ms" << std::endl;
+
 }

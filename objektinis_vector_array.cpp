@@ -10,6 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include <chrono>
+#include <filesystem>
 #include "objektinis.h"
 
 int main() {
@@ -17,6 +18,7 @@ int main() {
     std::vector<Studentas> stud;
     std::string input;
     bool nuskaite=true;
+    std::vector<Studentas> maladiec, lopai;
     std::cout << "Studentu Vardu ir pazymiu ivedimu sistema, skirta medianos bei vidurkio apskaiciavimui" << std::endl;
     while(true){
         Studentas temp;
@@ -48,7 +50,15 @@ int main() {
 
             }
             else if(validation(input) == 4){
-                skaitymas(temp, stud, nuskaite);
+                for (const auto& entry : std::filesystem::directory_iterator(".")) {
+                    auto name = entry.path().filename().string();
+                    if (entry.is_regular_file() && entry.path().extension() == ".txt" && name != "rezultatai.txt") {
+                        std::cout << entry.path().filename() << std::endl;
+                    }
+                }
+                std::cout << "Koki faila noretumete nuskaityti? " << std::endl;
+                std::cin >> input;
+                skaitymas(temp, stud, nuskaite, input);
                 if(nuskaite == true) break;
                 else std::cout << "Parinkite kita faila arba veskite duomenis" << std::endl;
             }
@@ -59,6 +69,7 @@ int main() {
                 failu_kurimas("studentai100000.txt", 100000, m);
                 failu_kurimas("studentai1000000.txt", 1000000, m);
                 failu_kurimas("studentai10000000.txt", 10000000, m);
+                std::cout << std::endl;
                 break;
             }
             else if(validation(input) == 6){
@@ -69,11 +80,37 @@ int main() {
         }
         break;
     }
-    vidurkis(stud);
-    mediana(stud);
     if(validation(input) == 5){
-        
+        Studentas temp;
+        while(true){
+            double laikas=0;
+            std::cout << "Kuri faila norite skaityti? 1 - studentai1000.txt, 2 - studenti 10000.txt, 3 - studentai100000.txt, 4 - studentai1000000.txt, 5 - studentai10000000.txt, 6 - baigti ";
+            std::string p;
+            std::cin >> p;
+
+
+            if(validation(p) == 1) skaitymas(temp, stud, nuskaite, "studentai1000.txt");
+            else if(validation(p) == 2) skaitymas(temp, stud, nuskaite, "studentai10000.txt");
+            else if(validation(p) == 3) skaitymas(temp, stud, nuskaite, "studentai100000.txt");
+            else if(validation(p) == 4) skaitymas(temp, stud, nuskaite, "studentai1000000.txt");
+            else if(validation(p) == 5) skaitymas(temp, stud, nuskaite, "studentai10000000.txt");
+            else if(validation(p) == 6) {
+                break;
+                return 0;
+            }
+
+            vidurkis(stud);
+            rusiavimas(stud);
+            skirstymas(stud, maladiec, lopai);
+            rasymas(maladiec, "maladiec.txt");
+            rasymas(lopai, "lopai.txt");
+            std::cout << std::endl;
+        }
     }
-    rusiavimas(stud);
-    isvestis_failas(stud);
+    else{
+        vidurkis(stud);
+        mediana(stud);
+        rusiavimas(stud);
+        isvestis_failas(stud);
+    }
 }
