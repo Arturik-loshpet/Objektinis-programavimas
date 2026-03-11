@@ -13,6 +13,8 @@
 #include <filesystem>
 #include "objektinis.h"
 
+
+
 int main() {
 
     std::vector<Studentas> stud;
@@ -51,7 +53,7 @@ int main() {
 
             }
             else if(validation(input) == 4){
-                for (const auto& entry : std::filesystem::directory_iterator(".")) {
+                for (const auto & entry : std::filesystem::directory_iterator(".")) {
                     auto name = entry.path().filename().string();
                     if (entry.is_regular_file() && entry.path().extension() == ".txt" && name != "rezultatai.txt") {
                         std::cout << entry.path().filename() << std::endl;
@@ -117,7 +119,6 @@ int main() {
                     if(p == 6) break;
                 }
                 else std::cout << "Iveskite tinkama sk. " << std::endl;
-
             }
             break;
         }
@@ -129,3 +130,4 @@ int main() {
         isvestis_failas(stud);
     }
 }
+//
