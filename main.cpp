@@ -60,11 +60,16 @@ int main() {
         }
         break;
     }
-    vidurkis(stud);
-    mediana(stud);
-    if(validation(input) == 4){
-        rusiavimas(stud);
-        isvestis_failas(stud);
+    if(stud.size() == 0){
+        std::cout << "Nera studentu duomenu! " << std::endl;
     }
-    else isvestis(stud);
+    else{
+        vidurkis(stud);
+        mediana(stud);
+        if(validation(input) == 4){
+            rusiavimas(stud);
+            isvestis_failas(stud);
+        }
+        else isvestis(stud);
+    }   
 }

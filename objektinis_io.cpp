@@ -110,13 +110,19 @@ void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite){
     std::string line;
     int paz;
     nuskaite = true;
+    int n = 0;
 
     for (const auto& entry : std::filesystem::directory_iterator(".")) {
         auto name = entry.path().filename().string();
         if (entry.is_regular_file() && entry.path().extension() == ".txt" && name != "rezultatai.txt") {
             std::cout << entry.path().filename() << std::endl;
+            n++;
         }
 
+    }
+    if(n == 0){
+        std::cout << "Nera failu!" << std::endl;
+        return;
     }
 
     std::cout << "Koki faila noretumete nuskaityti? " << std::endl;
