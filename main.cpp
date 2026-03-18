@@ -63,7 +63,7 @@ int main() {
                 }
                 if(n == 0){
                     std::cout << "Nera tinkamu failu! " << std::endl;
-                    
+                    break;
                 }
                 else{
                     std::cout << "Koki faila noretumete nuskaityti? " << std::endl;
@@ -130,6 +130,10 @@ int main() {
             }
             break;
         }
+    }
+    else if(stud.size() == 0){
+        std::cout << "Nera studentu duomenu" << std::endl;
+        return 0;
     }
     else{
         vidurkis(stud);
