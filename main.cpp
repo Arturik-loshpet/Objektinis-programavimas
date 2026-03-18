@@ -53,17 +53,25 @@ int main() {
 
             }
             else if(validation(input) == 4){
+                int n=0;
                 for (const auto & entry : std::filesystem::directory_iterator(".")) {
                     auto name = entry.path().filename().string();
                     if (entry.is_regular_file() && entry.path().extension() == ".txt" && name != "rezultatai.txt") {
                         std::cout << entry.path().filename() << std::endl;
+                        n++;
                     }
                 }
-                std::cout << "Koki faila noretumete nuskaityti? " << std::endl;
-                std::cin >> input;
-                skaitymas(temp, stud, nuskaite, input, b);
-                if(nuskaite == true) break;
-                else std::cout << "Parinkite kita faila arba veskite duomenis" << std::endl;
+                if(n == 0){
+                    std::cout << "Nera tinkamu failu! " << std::endl;
+                    
+                }
+                else{
+                    std::cout << "Koki faila noretumete nuskaityti? " << std::endl;
+                    std::cin >> input;
+                    skaitymas(temp, stud, nuskaite, input, b);
+                    if(nuskaite == true) break;
+                    else std::cout << "Parinkite kita faila arba veskite duomenis" << std::endl;
+                }
             }
             else if(validation(input) == 5){
                 m = paz_sk();
