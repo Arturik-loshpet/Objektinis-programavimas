@@ -8,14 +8,36 @@
 #include <algorithm>
 #include <string>
 #include <filesystem>
+#include <limits>
+#include <stdexcept>
 
 bool nuskaite;
+
+namespace {
+bool read_input(std::string& input) {
+    if (std::cin >> input) {
+        return true;
+    }
+
+    if (std::cin.eof()) {
+        std::cout << "Ivestis nutraukta." << std::endl;
+        return false;
+    }
+
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Netinkama ivestis. Bandykite dar karta." << std::endl;
+    return false;
+}
+}
 
 void paz_sk(Studentas& temp, int& m){
     std::string input;
     while(true){
             std::cout << "Kiek pazymiu turi " << temp.vardas << " " <<temp.pavarde << "? ";
-            std::cin >> input;
+            if (!read_input(input)) {
+                return;
+            }
             m = validation(input);
             if(m == 0) std::cout << "Ne skaicius!" << std::endl;
             else if(m < 1) std::cout << "iveskite tinkama sk." <<std::endl;
@@ -28,7 +50,9 @@ void paz_ivestis_ranka(Studentas& temp, int m){
     for(int j=0; j<m; j++){
             int pazymis;
             std::cout << "Iveskite " << j+1 << " pazymi: ";
-            std::cin >> input;
+            if (!read_input(input)) {
+                return;
+            }
             pazymis = validation(input);
             if(pazymis == 0){
                 std::cout << "Ne skaicius!" << std::endl;
@@ -49,7 +73,9 @@ void egz_ivestis_ranka(Studentas& temp){
     while(true){
             std::cout << "Koks yra " << temp.vardas << " " <<temp.pavarde << " egzamino rezultatas? ";
             int egz;
-            std::cin >> input;
+            if (!read_input(input)) {
+                return;
+            }
             egz = validation(input);
             if(egz == 0){
                 std::cout << "Ne skaicius!" << std::endl;
@@ -70,7 +96,9 @@ void isvestis(std::vector<Studentas>& stud){
     std::string input;
     while(true){
         std::cout << "Ka noretumet pamatyt? Mediana - 1, arba Vidurki - 2 ";
-        std::cin >> input;
+        if (!read_input(input)) {
+            return;
+        }
         if(validation(input) == 0) std::cout << "Iveskite sk! " <<std::endl;
         else if(validation(input) != 1 && validation(input) != 2) std::cout << "Iveskite tinkama sk!"<<std::endl;
         else break;
@@ -95,7 +123,16 @@ void vardu_ivedimas_ranka(Studentas& temp, std::vector<Studentas>& stud){
     while(true){
         std::string vardas, pavarde;
         std::cout << "Koks yra " << stud.size() + 1 << " studento vardas ir pavarde? ";
-        std::cin >> vardas >> pavarde;
+        if (!(std::cin >> vardas >> pavarde)) {
+            if (std::cin.eof()) {
+                std::cout << "Ivestis nutraukta." << std::endl;
+                return;
+            }
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Netinkama ivestis. Bandykite dar karta." << std::endl;
+            continue;
+        }
         if(valid_name(vardas) == true && valid_name(pavarde) == true){
             temp.vardas = vardas;
             temp.pavarde = pavarde;
@@ -109,64 +146,107 @@ void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite){
     std::string input;
     std::string line;
     int paz;
-    nuskaite = true;
+    nuskaite = false;
     int n = 0;
 
-    for (const auto& entry : std::filesystem::directory_iterator(".")) {
-        auto name = entry.path().filename().string();
-        if (entry.is_regular_file() && entry.path().extension() == ".txt" && name != "rezultatai.txt") {
-            std::cout << entry.path().filename() << std::endl;
-            n++;
+    try {
+        for (const auto& entry : std::filesystem::directory_iterator(".")) {
+            auto name = entry.path().filename().string();
+            if (entry.is_regular_file() && entry.path().extension() == ".txt" && name != "rezultatai.txt") {
+                std::cout << entry.path().filename() << std::endl;
+                n++;
+            }
         }
 
-    }
-    if(n == 0){
-        std::cout << "Nera failu!" << std::endl;
-        return;
-    }
-
-    std::cout << "Koki faila noretumete nuskaityti? " << std::endl;
-    std::cin >> input;
-    auto pradzia = std::chrono::high_resolution_clock::now();
-    std::ifstream duomfailas(input);
-    if (!duomfailas.is_open()) {
-        std::cout << "Nepavyko atidaryti failo! " << std::endl;
-        nuskaite = false;
-        return;
-    }
-    
-    if (duomfailas.peek() == std::ifstream::traits_type::eof()) {
-    std::cout << "Failas tuscias!" << std::endl;
-    nuskaite = false;
-    return;
-    }
-
-    std::stringstream buffer;
-    buffer << duomfailas.rdbuf(); 
-
-    std::getline(buffer, line);
-    while(std::getline(buffer, line)){
-        Studentas temp;
-        std::istringstream laik(line);
-        laik >> temp.vardas >> temp.pavarde;
-        while(laik >> paz){
-            temp.paz.push_back(paz);
+        if(n == 0){
+            throw std::runtime_error("Nera failu!");
         }
-        temp.egz = temp.paz.back();
-        temp.paz.pop_back();
-        stud.push_back(temp);
+
+        std::cout << "Koki faila noretumete nuskaityti? " << std::endl;
+        if (!read_input(input)) {
+            return;
+        }
+
+        std::filesystem::path failo_kelias = input;
+        if (!std::filesystem::exists(failo_kelias)) {
+            throw std::runtime_error("Toks failas nurodytame aplanke nerastas!");
+        }
+
+        if (!std::filesystem::is_regular_file(failo_kelias)) {
+            throw std::runtime_error("Nurodytas kelias nera failas!");
+        }
+
+        auto pradzia = std::chrono::high_resolution_clock::now();
+        std::ifstream duomfailas(input);
+        if (!duomfailas.is_open()) {
+            throw std::runtime_error("Nepavyko atidaryti failo!");
+        }
+
+        if (duomfailas.peek() == std::ifstream::traits_type::eof()) {
+            throw std::runtime_error("Failas tuscias!");
+        }
+
+        std::stringstream buffer;
+        buffer << duomfailas.rdbuf();
+
+        std::getline(buffer, line);
+        while(std::getline(buffer, line)){
+            if (line.empty()) {
+                continue;
+            }
+
+            Studentas temp;
+            std::istringstream laik(line);
+            if (!(laik >> temp.vardas >> temp.pavarde)) {
+                throw std::runtime_error("Netinkamas failo formatas.");
+            }
+
+            while(laik >> paz){
+                if (paz < 1 || paz > 10) {
+                    throw std::runtime_error("Pazymiai faile turi buti nuo 1 iki 10.");
+                }
+                temp.paz.push_back(paz);
+            }
+
+            if (laik.fail() && !laik.eof()) {
+                throw std::runtime_error("Netinkamas pazymio formatas faile.");
+            }
+
+            if (temp.paz.empty()) {
+                throw std::runtime_error("Studentas neturi nei vieno pazymio.");
+            }
+
+            temp.egz = temp.paz.back();
+            temp.paz.pop_back();
+
+            if (temp.paz.empty()) {
+                throw std::runtime_error("Truksta namu darbu pazymiu.");
+            }
+
+            stud.push_back(temp);
+        }
+        duomfailas.close();
+
+        auto pabaiga = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
+        std::cout << "Skaitymas uztruko " << trukme.count() << " ms" << std::endl;
+        nuskaite = true;
     }
-    duomfailas.close();
-    auto pabaiga = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
-    std::cout << "Skaitymas uztruko " << trukme.count() << " ms" << std::endl;
+    catch (const std::filesystem::filesystem_error& e) {
+        std::cout << "Failu sistemos klaida: " << e.what() << std::endl;
+    }
+    catch (const std::exception& e) {
+        std::cout << e.what() << std::endl;
+    }
 }
 
 void rusiavimas(std::vector<Studentas>& stud){
     std::string input;
     while(true){
         std::cout << "Rusiuokite studentus pagal: 1 - varda, 2 - pavarde, 3 - vidurki, 4 - mediana ";
-        std::cin >> input;
+        if (!read_input(input)) {
+            return;
+        }
         if(validation(input) == 1){
             std::sort(stud.begin(), stud.end(), [](const Studentas& a, const Studentas& b) {
             return a.vardas < b.vardas;
@@ -199,7 +279,9 @@ void isvestis_failas(std::vector<Studentas>& stud){
     std::string input;
     while(true){
         std::cout << "Duomenis rasyti: 1 - i konsole, 2 - i atskira faila: ";
-        std::cin >> input;
+        if (!read_input(input)) {
+            return;
+        }
         if(validation(input) == 1){
                 std::cout << std::left << std::setw(15) << "Vardas" << std::setw(15) << "Pavarde" << std::setw(20) << "Galutinis (Vid.)"  << std::setw(10) << "Galutinis (Med.)" << std::endl;
                 std::cout << "-----------------------------------------------------------------------------------" << std::endl;
@@ -218,6 +300,6 @@ void isvestis_failas(std::vector<Studentas>& stud){
                 rezfailas.close();
                 break;
         }
-        break;
+        std::cout << "Iveskite 1 arba 2." << std::endl;
     }
 }

@@ -7,9 +7,9 @@ struct Studentas {
     std::string vardas;
     std::string pavarde;
     std::vector<int> paz;
-    int egz;
-    double vid;
-    double med;
+    int egz = 0;
+    double vid = 0.0;
+    double med = 0.0;
 };
 
 //patikrinimai

@@ -10,7 +10,26 @@
 #include <fstream>
 #include <sstream>
 #include <chrono>
+#include <limits>
 #include "objektinis.h"
+
+namespace {
+bool read_menu_input(std::string& input) {
+    if (std::cin >> input) {
+        return true;
+    }
+
+    if (std::cin.eof()) {
+        std::cout << "Ivestis nutraukta." << std::endl;
+        return false;
+    }
+
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Netinkama ivestis. Bandykite dar karta." << std::endl;
+    return true;
+}
+}
 
 int main() {
 
@@ -21,20 +40,28 @@ int main() {
     while(true){
         Studentas temp;
         int last;
-        int m;
+        int m = 0;
           while(true){
             std::cout << "1 - ranką, 2 - generuoti tik pažymius, 3 - generuoti studentų vardus, pavardės ir pažymius, 4 - skaityti duomenis is failo, 5 - baigti darbą: ";
-            std::cin >> input;
+            if (!read_menu_input(input)) {
+                break;
+            }
             if (validation(input) == 1){
                 vardu_ivedimas_ranka(temp, stud);
+                if (temp.vardas.empty() || temp.pavarde.empty()) break;
                 paz_sk(temp,m);
+                if (m < 1) break;
                 paz_ivestis_ranka(temp, m);
+                if (temp.paz.size() != static_cast<size_t>(m)) break;
                 egz_ivestis_ranka(temp);
+                if (temp.egz == 0) break;
                 stud.push_back(temp);
             }
             else if(validation(input) == 2){
                 vardu_ivedimas_ranka(temp, stud);
+                if (temp.vardas.empty() || temp.pavarde.empty()) break;
                 paz_sk(temp, m);
+                if (m < 1) break;
                 paz_ivestis_random(temp, m);
                 egz_ivestis_random(temp);
                 stud.push_back(temp);

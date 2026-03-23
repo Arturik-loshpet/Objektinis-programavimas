@@ -29,12 +29,15 @@ void vidurkis(std::vector<Studentas>& stud){
 }
 
 int validation(std::string a){
-    int b;
     try {
-        b = stoi(a);
+        size_t pos = 0;
+        int b = stoi(a, &pos);
+        if (pos != a.size()) {
+            return 0;
+        }
         return b;
     }
-    catch (std::invalid_argument&){
+    catch (const std::exception&){
         return 0;
     }
 }
@@ -77,4 +80,3 @@ void vardu_ivedimas_random(Studentas& temp){
     temp.vardas = vard[r];
     temp.pavarde = pav[r];
 }
-
