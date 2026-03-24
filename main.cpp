@@ -21,6 +21,7 @@ int main() {
     std::string input;
     bool nuskaite=true;
     double b=0;
+    double laikas=0;
     std::vector<Studentas> maladiec, lopai;
     std::cout << "Studentu Vardu ir pazymiu ivedimu sistema, skirta medianos bei vidurkio apskaiciavimui" << std::endl;
     while(true){
@@ -59,11 +60,10 @@ int main() {
 
             }
             else if(validation(input) == 4){
-                double laikas=0;
                 int n=0;
                 for (const auto & entry : std::filesystem::directory_iterator(".")) {
                     auto name = entry.path().filename().string();
-                    if (entry.is_regular_file() && entry.path().extension() == ".txt" && name != "rezultatai.txt") {
+                    if (entry.is_regular_file() && entry.path().extension() == ".txt" && name != "rezultatai.txt" && name != "lopai.txt" && name != "maladiec.txt") {
                         std::cout << entry.path().filename() << std::endl;
                         n++;
                     }
@@ -75,7 +75,7 @@ int main() {
                 else{
                     std::cout << "Koki faila noretumete nuskaityti? " << std::endl;
                     std::cin >> input;
-                    skaitymas(temp, stud, nuskaite, input, b);
+                    skaitymas(temp, stud, nuskaite, input, laikas);
                     if(nuskaite == true){
                         testavimas(stud, maladiec, lopai, laikas);
                         break;
@@ -85,7 +85,6 @@ int main() {
             }
             else if(validation(input) == 5){
                 m = paz_sk();
-                double laikas = 0;
                 failu_kurimas("studentai1000.txt", 1000, m, b);
                 failu_kurimas("studentai10000.txt", 10000, m, b);
                 failu_kurimas("studentai100000.txt", 100000, m, b);

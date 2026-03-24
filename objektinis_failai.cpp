@@ -139,6 +139,7 @@ void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite, st
         auto pabaiga = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
         std::cout << "Skaitymas uztruko " << trukme.count() << " ms" << std::endl;
+        laikas += trukme.count();
         nuskaite = true;
     }
     catch (const std::filesystem::filesystem_error& e) {
@@ -195,7 +196,6 @@ void testavimas(std::vector<Studentas>& stud, std::vector<Studentas>& maladiec, 
 void tyrimai_5(std::vector<Studentas>& stud, std::vector<Studentas>& maladiec, std::vector<Studentas>& lopai, double& laikas){
         Studentas temp;
         while(true){
-            double laikas=0;
             std::string ivestis;
             while(true){
                 int p;

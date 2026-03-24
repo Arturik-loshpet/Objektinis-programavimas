@@ -11,6 +11,7 @@ Duoti testavimai turi skirtingus studentų pažymių kiekius, kad matytusi skirt
 <img width="990" height="125" alt="image" src="https://github.com/user-attachments/assets/bdd2429a-6c7d-443d-9119-a32dadcf3611" />
 <img width="995" height="430" alt="image" src="https://github.com/user-attachments/assets/ce9be59f-902c-4377-b3e0-3a3fcb25d8ac" />
 
-pagal duotus rezultatus matos aiškus skirtumas tarp failo su 1000 studentų ir 10000000 stundetų. 
+
+
 
 
