@@ -72,41 +72,81 @@ void isvestis_failas(std::vector<Studentas>& stud){
 void skaitymas(Studentas& temp, std::vector<Studentas>& stud, bool& nuskaite, std::string input, double& laikas){
     std::string line;
     int paz;
-    nuskaite = true;
-    auto pradzia = std::chrono::high_resolution_clock::now();
-    std::ifstream duomfailas(input);
-    if (!duomfailas.is_open()) {
-        std::cout << "Nepavyko atidaryti failo! " << std::endl;
-        nuskaite = false;
-        return;
-    }
-
-    if (duomfailas.peek() == std::ifstream::traits_type::eof()) {
-    std::cout << "Failas tuscias!" << std::endl;
     nuskaite = false;
-    return;
-    }
+    int n = 0;
 
-    std::stringstream buffer;
-    buffer << duomfailas.rdbuf(); 
-
-    std::getline(buffer, line);
-    while(std::getline(buffer, line)){
-        Studentas temp;
-        std::istringstream laik(line);
-        laik >> temp.vardas >> temp.pavarde;
-        while(laik >> paz){
-            temp.paz.push_back(paz);
+    try {
+        std::filesystem::path failo_kelias = input;
+        if (!std::filesystem::exists(failo_kelias)) {
+            throw std::runtime_error("Toks failas nurodytame aplanke nerastas!");
         }
-        temp.egz = temp.paz.back();
-        temp.paz.pop_back();
-        stud.push_back(temp);
+
+        if (!std::filesystem::is_regular_file(failo_kelias)) {
+            throw std::runtime_error("Nurodytas kelias nera failas!");
+        }
+
+        auto pradzia = std::chrono::high_resolution_clock::now();
+        std::ifstream duomfailas(input);
+        if (!duomfailas.is_open()) {
+            throw std::runtime_error("Nepavyko atidaryti failo!");
+        }
+
+        if (duomfailas.peek() == std::ifstream::traits_type::eof()) {
+            throw std::runtime_error("Failas tuscias!");
+        }
+
+        std::stringstream buffer;
+        buffer << duomfailas.rdbuf();
+
+        std::getline(buffer, line);
+        while(std::getline(buffer, line)){
+            if (line.empty()) {
+                continue;
+            }
+
+            Studentas temp;
+            std::istringstream laik(line);
+            if (!(laik >> temp.vardas >> temp.pavarde)) {
+                throw std::runtime_error("Netinkamas failo formatas.");
+            }
+
+            while(laik >> paz){
+                if (paz < 1 || paz > 10) {
+                    throw std::runtime_error("Pazymiai faile turi buti nuo 1 iki 10.");
+                }
+                temp.paz.push_back(paz);
+            }
+
+            if (laik.fail() && !laik.eof()) {
+                throw std::runtime_error("Netinkamas pazymio formatas faile.");
+            }
+
+            if (temp.paz.empty()) {
+                throw std::runtime_error("Studentas neturi nei vieno pazymio.");
+            }
+
+            temp.egz = temp.paz.back();
+            temp.paz.pop_back();
+
+            if (temp.paz.empty()) {
+                throw std::runtime_error("Truksta namu darbu pazymiu.");
+            }
+
+            stud.push_back(temp);
+        }
+        duomfailas.close();
+
+        auto pabaiga = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
+        std::cout << "Skaitymas uztruko " << trukme.count() << " ms" << std::endl;
+        nuskaite = true;
     }
-    duomfailas.close();
-    auto pabaiga = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
-    std::cout << "Skaitymas failo " << input <<" uztruko " << trukme.count() << " ms" << std::endl;
-    laikas += trukme.count();
+    catch (const std::filesystem::filesystem_error& e) {
+        std::cout << "Failu sistemos klaida: " << e.what() << std::endl;
+    }
+    catch (const std::exception& e) {
+        std::cout << e.what() << std::endl;
+    }
 }
 void skirstymas(std::vector<Studentas>& stud, std::vector<Studentas>& maladiec, std::vector<Studentas>& lopai, double& laikas){
     auto pradzia = std::chrono::high_resolution_clock::now();
@@ -142,7 +182,7 @@ void rasymas(std::vector<Studentas> a, std::string name, double& laikas){
     std::cout << name << " Rasymas truko " << trukme.count() << " ms" << std::endl;
     laikas += trukme.count();
 }
-void uzd_4(std::vector<Studentas>& stud, std::vector<Studentas>& maladiec, std::vector<Studentas>& lopai, double& laikas){
+void testavimas(std::vector<Studentas>& stud, std::vector<Studentas>& maladiec, std::vector<Studentas>& lopai, double& laikas){
     vidurkis(stud);
     mediana(stud);
     rusiavimas(stud, laikas);
@@ -152,3 +192,43 @@ void uzd_4(std::vector<Studentas>& stud, std::vector<Studentas>& maladiec, std::
     std::cout << "Darbas su failu uztruko " << laikas << " ms" <<std::endl;
     std::cout << std::endl;
 }
+void tyrimai_5(std::vector<Studentas>& stud, std::vector<Studentas>& maladiec, std::vector<Studentas>& lopai, double& laikas){
+        Studentas temp;
+        while(true){
+            double laikas=0;
+            std::string ivestis;
+            while(true){
+                int p;
+                std::cout << "Kuri faila norite skaityti? 1 - studentai1000.txt, 2 - studenti 10000.txt, 3 - studentai100000.txt, 4 - studentai1000000.txt, 5 - studentai10000000.txt, 6 - baigti ";
+                std::cin >> ivestis;
+                p = validation(ivestis);
+                if(p >= 1 && p <= 6){
+                    switch (p){
+                    case 1:
+                        skaitymas(temp, stud, nuskaite, "studentai1000.txt", laikas);
+                        testavimas(stud, maladiec, lopai, laikas);
+                        break;
+                    case 2:
+                        skaitymas(temp, stud, nuskaite, "studentai10000.txt", laikas);
+                        testavimas(stud, maladiec, lopai, laikas);
+                        break;
+                    case 3:
+                        skaitymas(temp, stud, nuskaite, "studentai100000.txt", laikas);
+                        testavimas(stud, maladiec, lopai, laikas);
+                        break;
+                    case 4:
+                        skaitymas(temp, stud, nuskaite, "studentai1000000.txt", laikas);
+                        testavimas(stud, maladiec, lopai, laikas);
+                        break;
+                    case 5:
+                        skaitymas(temp, stud, nuskaite, "studentai10000000.txt", laikas);
+                        testavimas(stud, maladiec, lopai, laikas);
+                        break;
+                    }
+                    if(p == 6) break;
+                }
+                else std::cout << "Iveskite tinkama sk. " << std::endl;
+            }
+            break;
+        }
+    }

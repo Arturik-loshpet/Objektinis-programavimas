@@ -10,11 +10,29 @@
 #include <filesystem>
 #include <random>
 
+bool read_input(std::string& input) {
+    if (std::cin >> input) {
+        return true;
+    }
+
+    if (std::cin.eof()) {
+        std::cout << "Ivestis nutraukta." << std::endl;
+        return false;
+    }
+
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Netinkama ivestis. Bandykite dar karta." << std::endl;
+    return false;
+}
+
 void paz_sk(Studentas& temp, int& m){
     std::string input;
     while(true){
             std::cout << "Kiek pazymiu turi " << temp.vardas << " " <<temp.pavarde << "? ";
-            std::cin >> input;
+            if (!read_input(input)) {
+                return;
+            }
             m = validation(input);
             if(m == 0) std::cout << "Ne skaicius!" << std::endl;
             else if(m < 1) std::cout << "iveskite tinkama sk." <<std::endl;
@@ -27,14 +45,11 @@ void paz_ivestis_ranka(Studentas& temp, int m){
     for(int j=0; j<m; j++){
             int pazymis;
             std::cout << "Iveskite " << j+1 << " pazymi: ";
-            std::cin >> input;
-            pazymis = validation(input);
-            if(pazymis == 0){
-                std::cout << "Ne skaicius!" << std::endl;
-                j--;
-                continue;
+            if (!read_input(input)) {
+                return;
             }
-            else if(pazymis > 10 || pazymis < 1){
+            pazymis = validation(input);
+            if(pazymis > 10 || pazymis < 1){
                 std::cout << "Netinkamas sk. Bandykite dar karta" << std::endl;
                 j--;
                 continue;
@@ -48,13 +63,11 @@ void egz_ivestis_ranka(Studentas& temp){
     while(true){
             std::cout << "Koks yra " << temp.vardas << " " <<temp.pavarde << " egzamino rezultatas? ";
             int egz;
-            std::cin >> input;
-            egz = validation(input);
-            if(egz == 0){
-                std::cout << "Ne skaicius!" << std::endl;
-                continue;
+            if (!read_input(input)) {
+                return;
             }
-            else if(egz > 10 || egz < 1){
+            egz = validation(input);
+            if(egz > 10 || egz < 1){
                 std::cout << "Netinkamas sk. Bandykite dar karta" << std::endl;
                 continue;
             }
@@ -65,13 +78,15 @@ void egz_ivestis_ranka(Studentas& temp){
         }
 }
 
+
 void isvestis(std::vector<Studentas>& stud){
     std::string input;
     while(true){
         std::cout << "Ka noretumet pamatyt? Mediana - 1, arba Vidurki - 2 ";
-        std::cin >> input;
-        if(validation(input) == 0) std::cout << "Iveskite sk! " <<std::endl;
-        else if(validation(input) != 1 && validation(input) != 2) std::cout << "Iveskite tinkama sk!"<<std::endl;
+        if (!read_input(input)) {
+            return;
+        }
+        if(validation(input) != 1 && validation(input) != 2) std::cout << "Iveskite tinkama sk!"<<std::endl;
         else break;
     }
     if(validation(input) == 1){
@@ -94,7 +109,16 @@ void vardu_ivedimas_ranka(Studentas& temp, std::vector<Studentas>& stud){
     while(true){
         std::string vardas, pavarde;
         std::cout << "Koks yra " << stud.size() + 1 << " studento vardas ir pavarde? ";
-        std::cin >> vardas >> pavarde;
+        if (!(std::cin >> vardas >> pavarde)) {
+            if (std::cin.eof()) {
+                std::cout << "Ivestis nutraukta." << std::endl;
+                return;
+            }
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Netinkama ivestis. Bandykite dar karta." << std::endl;
+            continue;
+        }
         if(valid_name(vardas) == true && valid_name(pavarde) == true){
             temp.vardas = vardas;
             temp.pavarde = pavarde;

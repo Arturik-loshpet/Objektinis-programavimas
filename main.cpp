@@ -32,14 +32,20 @@ int main() {
             std::cin >> input;
             if (validation(input) == 1){
                 vardu_ivedimas_ranka(temp, stud);
+                if (temp.vardas.empty() || temp.pavarde.empty()) break;
                 paz_sk(temp,m);
+                if (m < 1) break;
                 paz_ivestis_ranka(temp, m);
+                if (temp.paz.size() != static_cast<size_t>(m)) break;
                 egz_ivestis_ranka(temp);
+                if (temp.egz == 0) break;
                 stud.push_back(temp);
             }
             else if(validation(input) == 2){
                 vardu_ivedimas_ranka(temp, stud);
+                if (temp.vardas.empty() || temp.pavarde.empty()) break;
                 paz_sk(temp, m);
+                if (m < 1) break;
                 paz_ivestis_random(temp, m);
                 egz_ivestis_random(temp);
                 stud.push_back(temp);
@@ -53,6 +59,7 @@ int main() {
 
             }
             else if(validation(input) == 4){
+                double laikas=0;
                 int n=0;
                 for (const auto & entry : std::filesystem::directory_iterator(".")) {
                     auto name = entry.path().filename().string();
@@ -69,18 +76,23 @@ int main() {
                     std::cout << "Koki faila noretumete nuskaityti? " << std::endl;
                     std::cin >> input;
                     skaitymas(temp, stud, nuskaite, input, b);
-                    if(nuskaite == true) break;
+                    if(nuskaite == true){
+                        testavimas(stud, maladiec, lopai, laikas);
+                        break;
+                    }
                     else std::cout << "Parinkite kita faila arba veskite duomenis" << std::endl;
                 }
             }
             else if(validation(input) == 5){
                 m = paz_sk();
+                double laikas = 0;
                 failu_kurimas("studentai1000.txt", 1000, m, b);
                 failu_kurimas("studentai10000.txt", 10000, m, b);
                 failu_kurimas("studentai100000.txt", 100000, m, b);
                 failu_kurimas("studentai1000000.txt", 1000000, m, b);
                 failu_kurimas("studentai10000000.txt", 10000000, m, b);
                 std::cout << std::endl;
+                tyrimai_5(stud, maladiec, lopai, laikas);
                 break;
             }
             else if(validation(input) == 6){
@@ -91,48 +103,7 @@ int main() {
         }
         break;
     }
-    if(validation(input) == 5){
-        Studentas temp;
-        while(true){
-            double laikas=0;
-            std::string ivestis;
-            while(true){
-                int p;
-                std::cout << "Kuri faila norite skaityti? 1 - studentai1000.txt, 2 - studenti 10000.txt, 3 - studentai100000.txt, 4 - studentai1000000.txt, 5 - studentai10000000.txt, 6 - baigti ";
-                std::cin >> ivestis;
-                p = validation(ivestis);
-                if(p >= 1 && p <= 6){
-                    switch (p){
-                    case 1:
-                        skaitymas(temp, stud, nuskaite, "studentai1000.txt", laikas);
-                        uzd_4(stud, maladiec, lopai, laikas);
-                        break;
-                    case 2:
-                        skaitymas(temp, stud, nuskaite, "studentai10000.txt", laikas);
-                        uzd_4(stud, maladiec, lopai, laikas);
-                        break;
-                    case 3:
-                        skaitymas(temp, stud, nuskaite, "studentai100000.txt", laikas);
-                        uzd_4(stud, maladiec, lopai, laikas);
-                        break;
-                    case 4:
-                        skaitymas(temp, stud, nuskaite, "studentai1000000.txt", laikas);
-                        uzd_4(stud, maladiec, lopai, laikas);
-                        break;
-                    case 5:
-                        skaitymas(temp, stud, nuskaite, "studentai10000000.txt", laikas);
-                        uzd_4(stud, maladiec, lopai, laikas);
-                        break;
-                    }
-                    if(p == 6) break;
-                }
-                else std::cout << "Iveskite tinkama sk. " << std::endl;
-            }
-            break;
-        }
-    }
-    else if(stud.size() == 0){
-        std::cout << "Nera studentu duomenu" << std::endl;
+    if(stud.size() == 0){
         return 0;
     }
     else{
