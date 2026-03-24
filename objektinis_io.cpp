@@ -54,12 +54,7 @@ void paz_ivestis_ranka(Studentas& temp, int m){
                 return;
             }
             pazymis = validation(input);
-            if(pazymis == 0){
-                std::cout << "Ne skaicius!" << std::endl;
-                j--;
-                continue;
-            }
-            else if(pazymis > 10 || pazymis < 1){
+            if(pazymis > 10 || pazymis < 1){
                 std::cout << "Netinkamas sk. Bandykite dar karta" << std::endl;
                 j--;
                 continue;
@@ -77,11 +72,7 @@ void egz_ivestis_ranka(Studentas& temp){
                 return;
             }
             egz = validation(input);
-            if(egz == 0){
-                std::cout << "Ne skaicius!" << std::endl;
-                continue;
-            }
-            else if(egz > 10 || egz < 1){
+            if(egz > 10 || egz < 1){
                 std::cout << "Netinkamas sk. Bandykite dar karta" << std::endl;
                 continue;
             }
@@ -99,8 +90,7 @@ void isvestis(std::vector<Studentas>& stud){
         if (!read_input(input)) {
             return;
         }
-        if(validation(input) == 0) std::cout << "Iveskite sk! " <<std::endl;
-        else if(validation(input) != 1 && validation(input) != 2) std::cout << "Iveskite tinkama sk!"<<std::endl;
+        if(validation(input) != 1 && validation(input) != 2) std::cout << "Iveskite tinkama sk!"<<std::endl;
         else break;
     }
     if(validation(input) == 1){
