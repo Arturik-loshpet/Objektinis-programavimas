@@ -1,8 +1,5 @@
-#include <iostream>
-#include <string>
-
-#include "objektinis.h"
-
+#include "funkcijos.h"
+#include "library.h"
 int main() {
     std::string input;
 

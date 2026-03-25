@@ -1,14 +1,309 @@
-#include "objektinis.h"
+#ifndef STUDENTAS_H
+#define STUDENTAS_H
 
-#include <chrono>
-#include <filesystem>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <random>
-#include <sstream>
+#include "library.h"
 
-void failu_kurimas(const std::string& name, int zmones, int m, double& laikas) {
+template <typename GradeContainer>
+struct Studentas {
+    std::string vardas;
+    std::string pavarde;
+    GradeContainer paz;
+    int egz = 0;
+    double vid = 0.0;
+    double med = 0.0;
+};
+
+using VectorStudent = Studentas<std::vector<int>>;
+using ListStudent = Studentas<std::list<int>>;
+using DequeStudent = Studentas<std::deque<int>>;
+
+using VectorContainer = std::vector<VectorStudent>;
+using ListContainer = std::list<ListStudent>;
+using DequeContainer = std::deque<DequeStudent>;
+
+inline bool valid_name(const std::string& s) {
+    if (s.empty()) {
+        return false;
+    }
+
+    for (unsigned char c : s) {
+        if (!std::isalpha(c) && c != '-') {
+            return false;
+        }
+    }
+    return true;
+}
+
+inline int validation(const std::string& a) {
+    try {
+        return std::stoi(a);
+    } catch (const std::exception&) {
+        return 0;
+    }
+}
+
+inline bool read_input(std::string& input) {
+    if (std::cin >> input) {
+        return true;
+    }
+
+    if (std::cin.eof()) {
+        std::cout << "Ivestis nutraukta." << std::endl;
+        return false;
+    }
+
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Netinkama ivestis. Bandykite dar karta." << std::endl;
+    return false;
+}
+
+inline int paz_sk() {
+    std::string input;
+    int pazsk = 0;
+    while (true) {
+        std::cout << "Kiek pazymiu tures studentai sarase? ";
+        std::cin >> input;
+        pazsk = validation(input);
+        if (pazsk > 0) {
+            return pazsk;
+        }
+        std::cout << "iveskite tinkama sk! " << std::endl;
+    }
+}
+
+template <typename T, typename Allocator, typename Compare>
+void sort_container(std::list<T, Allocator>& container, Compare comp) {
+    container.sort(comp);
+}
+
+template <typename Container, typename Compare>
+void sort_container(Container& container, Compare comp) {
+    std::sort(container.begin(), container.end(), comp);
+}
+
+template <typename GradeContainer>
+double skaiciuoti_mediana(GradeContainer& paz) {
+    if (paz.empty()) {
+        return 0.0;
+    }
+
+    if constexpr (std::is_same_v<GradeContainer, std::list<int>>) {
+        paz.sort(std::less<int>{});
+    } else {
+        std::sort(paz.begin(), paz.end(), std::less<int>{});
+    }
+
+    const std::size_t dydis = paz.size();
+    auto mid = paz.begin();
+    std::advance(mid, static_cast<long>(dydis / 2));
+    if (dydis % 2 == 0) {
+        auto left = mid;
+        --left;
+        return (*left + *mid) / 2.0;
+    }
+    return static_cast<double>(*mid);
+}
+
+template <typename Student>
+void paz_sk(Student& temp, int& m) {
+    std::string input;
+    while (true) {
+        std::cout << "Kiek pazymiu turi " << temp.vardas << " " << temp.pavarde << "? ";
+        if (!read_input(input)) {
+            return;
+        }
+        m = validation(input);
+        if (m == 0) {
+            std::cout << "Ne skaicius!" << std::endl;
+        } else if (m < 1) {
+            std::cout << "iveskite tinkama sk." << std::endl;
+        } else {
+            break;
+        }
+    }
+}
+
+template <typename Student>
+void paz_ivestis_ranka(Student& temp, int m) {
+    std::string input;
+    for (int j = 0; j < m; ++j) {
+        std::cout << "Iveskite " << j + 1 << " pazymi: ";
+        if (!read_input(input)) {
+            return;
+        }
+        const int pazymis = validation(input);
+        if (pazymis > 10 || pazymis < 1) {
+            std::cout << "Netinkamas sk. Bandykite dar karta" << std::endl;
+            --j;
+            continue;
+        }
+        temp.paz.push_back(pazymis);
+    }
+}
+
+template <typename Student>
+void egz_ivestis_ranka(Student& temp) {
+    std::string input;
+    while (true) {
+        std::cout << "Koks yra " << temp.vardas << " " << temp.pavarde << " egzamino rezultatas? ";
+        if (!read_input(input)) {
+            return;
+        }
+        const int egz = validation(input);
+        if (egz > 10 || egz < 1) {
+            std::cout << "Netinkamas sk. Bandykite dar karta" << std::endl;
+            continue;
+        }
+        temp.egz = egz;
+        break;
+    }
+}
+
+template <typename Student>
+void vardu_ivedimas_ranka(Student& temp, std::size_t current_count) {
+    while (true) {
+        std::string vardas;
+        std::string pavarde;
+        std::cout << "Koks yra " << current_count + 1 << " studento vardas ir pavarde? ";
+        if (!(std::cin >> vardas >> pavarde)) {
+            if (std::cin.eof()) {
+                std::cout << "Ivestis nutraukta." << std::endl;
+                return;
+            }
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Netinkama ivestis. Bandykite dar karta." << std::endl;
+            continue;
+        }
+        if (valid_name(vardas) && valid_name(pavarde)) {
+            temp.vardas = vardas;
+            temp.pavarde = pavarde;
+            break;
+        }
+        std::cout << "Iveskite tinkama varda ir pavarde" << std::endl;
+    }
+}
+
+template <typename Student>
+void paz_ivestis_random(Student& temp, int m) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(1, 10);
+    for (int i = 0; i < m; ++i) {
+        temp.paz.push_back(dist(gen));
+    }
+}
+
+template <typename Student>
+void egz_ivestis_random(Student& temp) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(1, 10);
+    temp.egz = dist(gen);
+}
+
+template <typename Student>
+void vardu_ivedimas_random(Student& temp) {
+    static const std::vector<std::string> vard = {
+        "Artur", "Simas", "Romas", "Patrikas", "Rokas",
+        "Ignas", "Tomas", "Rugile", "Aiste", "Martynas"
+    };
+    static const std::vector<std::string> pav = {
+        "Pavardenis1", "Pavardenis2", "Pavardenis3", "Pavardenis4", "Pavardenis5",
+        "Pavardenis6", "Pavardenis7", "Pavardenis8", "Pavardenis9", "Pavardenis10"
+    };
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(0, 9);
+    const int r = dist(gen);
+    temp.vardas = vard[r];
+    temp.pavarde = pav[r];
+}
+
+template <typename StudentContainer>
+void vidurkis(StudentContainer& stud) {
+    for (auto& studentas : stud) {
+        double sum = 0.0;
+        for (int pazymis : studentas.paz) {
+            sum += pazymis;
+        }
+        studentas.vid = (sum / static_cast<double>(studentas.paz.size())) * 0.4 + studentas.egz * 0.6;
+    }
+}
+
+template <typename StudentContainer>
+void mediana(StudentContainer& stud) {
+    for (auto& studentas : stud) {
+        studentas.med = skaiciuoti_mediana(studentas.paz);
+    }
+}
+
+template <typename StudentContainer>
+void isvestis(StudentContainer& stud) {
+    std::string input;
+    while (true) {
+        std::cout << "Ka noretumet pamatyt? Mediana - 1, arba Vidurki - 2 ";
+        if (!read_input(input)) {
+            return;
+        }
+
+        const int choice = validation(input);
+        if (choice != 1 && choice != 2) {
+            std::cout << "Iveskite tinkama sk!" << std::endl;
+            continue;
+        }
+
+        if (choice == 1) {
+            std::cout << std::left << std::setw(15) << "Vardas" << std::setw(15) << "Pavarde"
+                      << std::setw(20) << "Galutinis (Med.)" << std::endl;
+        } else {
+            std::cout << std::left << std::setw(15) << "Vardas" << std::setw(15) << "Pavarde"
+                      << std::setw(20) << "Galutinis (Vid.)" << std::endl;
+        }
+        std::cout << "-----------------------------------------------------------------------------------" << std::endl;
+        for (const auto& studentas : stud) {
+            std::cout << std::fixed << std::left << std::setw(15) << studentas.vardas
+                      << std::setw(15) << studentas.pavarde << std::setw(9) << std::setprecision(2)
+                      << (choice == 1 ? studentas.med : studentas.vid) << std::endl;
+        }
+        return;
+    }
+}
+
+template <typename StudentContainer>
+void rusiavimas(StudentContainer& stud, double& laikas) {
+    std::string input;
+    while (true) {
+        std::cout << "Rusiuokite studentus pagal: 1 - varda, 2 - pavarde, 3 - vidurki, 4 - mediana ";
+        if (!read_input(input)) {
+            return;
+        }
+
+        const auto pradzia = std::chrono::high_resolution_clock::now();
+        const int choice = validation(input);
+        if (choice == 1) {
+            sort_container(stud, [](const auto& a, const auto& b) { return a.vardas < b.vardas; });
+        } else if (choice == 2) {
+            sort_container(stud, [](const auto& a, const auto& b) { return a.pavarde < b.pavarde; });
+        } else if (choice == 3) {
+            sort_container(stud, [](const auto& a, const auto& b) { return a.vid < b.vid; });
+        } else if (choice == 4) {
+            sort_container(stud, [](const auto& a, const auto& b) { return a.med < b.med; });
+        } else {
+            std::cout << "Iveskite tinkama sk!" << std::endl;
+            continue;
+        }
+
+        const auto pabaiga = std::chrono::high_resolution_clock::now();
+        const std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
+        laikas += trukme.count();
+        return;
+    }
+}
+
+inline void failu_kurimas(const std::string& name, int zmones, int m, double& laikas) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dist(1, 10);
@@ -239,7 +534,7 @@ void tyrimai_5(StudentContainer& stud, StudentContainer& maladiec, StudentContai
 }
 
 template <typename StudentContainer>
-void run_program(const std::string& konteinerio_pavadinimas) {
+int run_program(const std::string& konteinerio_pavadinimas) {
     using Student = typename StudentContainer::value_type;
 
     StudentContainer stud;
@@ -356,27 +651,7 @@ void run_program(const std::string& konteinerio_pavadinimas) {
         rusiavimas(stud, b);
     }
     isvestis_failas(stud);
-    return;
+    return 0;
 }
 
-template void isvestis_failas<VectorContainer>(VectorContainer& stud);
-template void isvestis_failas<ListContainer>(ListContainer& stud);
-template void isvestis_failas<DequeContainer>(DequeContainer& stud);
-template void skaitymas<VectorContainer>(VectorContainer& stud, bool& nuskaite, const std::string& input, double& laikas);
-template void skaitymas<ListContainer>(ListContainer& stud, bool& nuskaite, const std::string& input, double& laikas);
-template void skaitymas<DequeContainer>(DequeContainer& stud, bool& nuskaite, const std::string& input, double& laikas);
-template void skirstymas<VectorContainer>(VectorContainer& stud, VectorContainer& maladiec, VectorContainer& lopai, double& laikas);
-template void skirstymas<ListContainer>(ListContainer& stud, ListContainer& maladiec, ListContainer& lopai, double& laikas);
-template void skirstymas<DequeContainer>(DequeContainer& stud, DequeContainer& maladiec, DequeContainer& lopai, double& laikas);
-template void rasymas<VectorContainer>(const VectorContainer& a, const std::string& name, double& laikas);
-template void rasymas<ListContainer>(const ListContainer& a, const std::string& name, double& laikas);
-template void rasymas<DequeContainer>(const DequeContainer& a, const std::string& name, double& laikas);
-template void testavimas<VectorContainer>(VectorContainer& stud, VectorContainer& maladiec, VectorContainer& lopai, double& laikas);
-template void testavimas<ListContainer>(ListContainer& stud, ListContainer& maladiec, ListContainer& lopai, double& laikas);
-template void testavimas<DequeContainer>(DequeContainer& stud, DequeContainer& maladiec, DequeContainer& lopai, double& laikas);
-template void tyrimai_5<VectorContainer>(VectorContainer& stud, VectorContainer& maladiec, VectorContainer& lopai, double& laikas);
-template void tyrimai_5<ListContainer>(ListContainer& stud, ListContainer& maladiec, ListContainer& lopai, double& laikas);
-template void tyrimai_5<DequeContainer>(DequeContainer& stud, DequeContainer& maladiec, DequeContainer& lopai, double& laikas);
-template int run_program<VectorContainer>(const std::string& konteinerio_pavadinimas);
-template int run_program<ListContainer>(const std::string& konteinerio_pavadinimas);
-template int run_program<DequeContainer>(const std::string& konteinerio_pavadinimas);
+#endif
