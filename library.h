@@ -1,5 +1,5 @@
-#ifndef STUDENTAS_H
-#define STUDENTAS_H
+#ifndef LIBRARY_H
+#define LIBRARY_H
 
 #include <algorithm>
 #include <chrono>

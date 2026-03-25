@@ -2,6 +2,7 @@
 #define STUDENTAS_H
 
 #include "library.h"
+#include "patikrinimai.h"
 
 template <typename GradeContainer>
 struct Studentas {
@@ -21,56 +22,6 @@ using VectorContainer = std::vector<VectorStudent>;
 using ListContainer = std::list<ListStudent>;
 using DequeContainer = std::deque<DequeStudent>;
 
-inline bool valid_name(const std::string& s) {
-    if (s.empty()) {
-        return false;
-    }
-
-    for (unsigned char c : s) {
-        if (!std::isalpha(c) && c != '-') {
-            return false;
-        }
-    }
-    return true;
-}
-
-inline int validation(const std::string& a) {
-    try {
-        return std::stoi(a);
-    } catch (const std::exception&) {
-        return 0;
-    }
-}
-
-inline bool read_input(std::string& input) {
-    if (std::cin >> input) {
-        return true;
-    }
-
-    if (std::cin.eof()) {
-        std::cout << "Ivestis nutraukta." << std::endl;
-        return false;
-    }
-
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cout << "Netinkama ivestis. Bandykite dar karta." << std::endl;
-    return false;
-}
-
-inline int paz_sk() {
-    std::string input;
-    int pazsk = 0;
-    while (true) {
-        std::cout << "Kiek pazymiu tures studentai sarase? ";
-        std::cin >> input;
-        pazsk = validation(input);
-        if (pazsk > 0) {
-            return pazsk;
-        }
-        std::cout << "iveskite tinkama sk! " << std::endl;
-    }
-}
 
 template <typename T, typename Allocator, typename Compare>
 void sort_container(std::list<T, Allocator>& container, Compare comp) {

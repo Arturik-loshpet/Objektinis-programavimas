@@ -1,22 +1,8 @@
-#include <algorithm>
-#include <chrono>
-#include <cctype>
-#include <cstddef>
-#include <deque>
-#include <filesystem>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <iterator>
-#include <limits>
-#include <list>
-#include <random>
-#include <sstream>
-#include <string>
-#include <type_traits>
-#include <vector>
 
-inline bool valid_name(const std::string& s) {
+#include "library.h"
+#include "patikrinimai.h"
+
+bool valid_name(const std::string& s) {
     if (s.empty()) {
         return false;
     }
@@ -27,4 +13,42 @@ inline bool valid_name(const std::string& s) {
         }
     }
     return true;
+}
+
+int validation(const std::string& a) {
+    try {
+        return std::stoi(a);
+    } catch (const std::exception&) {
+        return 0;
+    }
+}
+
+bool read_input(std::string& input) {
+    if (std::cin >> input) {
+        return true;
+    }
+
+    if (std::cin.eof()) {
+        std::cout << "Ivestis nutraukta." << std::endl;
+        return false;
+    }
+
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Netinkama ivestis. Bandykite dar karta." << std::endl;
+    return false;
+}
+
+inline int paz_sk() {
+    std::string input;
+    int pazsk = 0;
+    while (true) {
+        std::cout << "Kiek pazymiu tures studentai sarase? ";
+        std::cin >> input;
+        pazsk = validation(input);
+        if (pazsk > 0) {
+            return pazsk;
+        }
+        std::cout << "iveskite tinkama sk! " << std::endl;
+    }
 }

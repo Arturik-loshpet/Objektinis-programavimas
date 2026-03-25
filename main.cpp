@@ -1,5 +1,5 @@
 #include "funkcijos.h"
-#include "library.h"
+
 int main() {
     std::string input;
 
