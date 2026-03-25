@@ -1,4 +1,6 @@
 #include "funkcijos.h"
+#include "library.h"
+#include "patikrinimai.h"
 
 int main() {
     std::string input;

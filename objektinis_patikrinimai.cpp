@@ -39,7 +39,7 @@ bool read_input(std::string& input) {
     return false;
 }
 
-inline int paz_sk() {
+int paz_sk() {
     std::string input;
     int pazsk = 0;
     while (true) {
