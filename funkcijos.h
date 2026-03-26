@@ -316,12 +316,11 @@ void isvestis_failas(StudentContainer& stud) {
 }
 
 template <typename StudentContainer>
-void skaitymas(StudentContainer& stud, bool& nuskaite, const std::string& input, double& laikas) {
+void skaitymas(StudentContainer& stud, const std::string& input, double& laikas) {
     using Student = typename StudentContainer::value_type;
 
     std::string line;
     int pazymis = 0;
-    nuskaite = false;
 
     try {
         const std::filesystem::path failo_kelias = input;
@@ -383,7 +382,6 @@ void skaitymas(StudentContainer& stud, bool& nuskaite, const std::string& input,
         const std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
         std::cout << "Skaitymas uztruko " << trukme.count() << " ms" << std::endl;
         laikas += trukme.count();
-        nuskaite = true;
     } catch (const std::filesystem::filesystem_error& e) {
         std::cout << "Failu sistemos klaida: " << e.what() << std::endl;
     } catch (const std::exception& e) {
@@ -433,7 +431,7 @@ template <typename StudentContainer>
 void testavimas(StudentContainer& stud, StudentContainer& maladiec, StudentContainer& lopai, double& laikas) {
     vidurkis(stud);
     mediana(stud);
-    rusiavimas(stud, laikas);
+    sort_ascending(stud, laikas);
     skirstymas(stud, maladiec, lopai, laikas);
     rasymas(maladiec, "maladiec.txt", laikas);
     rasymas(lopai, "lopai.txt", laikas);
@@ -471,16 +469,13 @@ void tyrimai_5(StudentContainer& stud, StudentContainer& maladiec, StudentContai
             continue;
         }
 
-        bool nuskaite = false;
         stud.clear();
         maladiec.clear();
         lopai.clear();
         laikas = 0;
 
-        skaitymas(stud, nuskaite, failo_vardas, laikas);
-        if (nuskaite) {
-            testavimas(stud, maladiec, lopai, laikas);
-        }
+        skaitymas(stud, failo_vardas, laikas);
+        testavimas(stud, maladiec, lopai, laikas);
     }
 }
 
@@ -492,7 +487,6 @@ int run_program(const std::string& konteinerio_pavadinimas) {
     StudentContainer maladiec;
     StudentContainer lopai;
     std::string input;
-    bool nuskaite = true;
     double b = 0.0;
     double laikas = 0.0;
 
@@ -581,6 +575,22 @@ int run_program(const std::string& konteinerio_pavadinimas) {
     }
     isvestis_failas(stud);
     return 0;
+}
+template <typename Container>
+void sort_ascending(Container& c, double& laikas) {
+    const auto pradzia = std::chrono::high_resolution_clock::now();
+    if constexpr (std::is_same_v<Container, std::list<typename Container::value_type>>) {
+        c.sort([](const auto& a, const auto& b) {
+        return a.vid < b.vid;
+    });
+    } else {
+        std::sort(c.begin(), c.end(), [](const auto& a, const auto& b) {
+        return a.vid < b.vid;
+    });
+    }
+    const auto pabaiga = std::chrono::high_resolution_clock::now();
+    const std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
+    laikas += trukme.count();
 }
 
 #endif
