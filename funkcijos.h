@@ -548,30 +548,8 @@ int run_program(const std::string& konteinerio_pavadinimas) {
                 egz_ivestis_random(temp);
                 stud.push_back(temp);
             } else if (choice == 4) {
-                int n = 0;
-                for (const auto& entry : std::filesystem::directory_iterator(".")) {
-                    const auto name = entry.path().filename().string();
-                    if (entry.is_regular_file() && entry.path().extension() == ".txt" &&
-                        name != "rezultatai.txt" && name != "lopai.txt" && name != "maladiec.txt") {
-                        std::cout << entry.path().filename() << std::endl;
-                        ++n;
-                    }
-                }
-                if (n == 0) {
-                    std::cout << "Nera tinkamu failu! " << std::endl;
-                    break;
-                }
-
-                std::cout << "Koki faila noretumete nuskaityti? " << std::endl;
-                if (!read_input(input)) {
-                    return 0;
-                }
-                skaitymas(stud, nuskaite, input, laikas);
-                if (nuskaite) {
-                    testavimas(stud, maladiec, lopai, laikas);
-                    break;
-                }
-                std::cout << "Parinkite kita faila arba veskite duomenis" << std::endl;
+                tyrimai_5(stud, maladiec, lopai, laikas);
+                break;
             } else if (choice == 5) {
                 m = paz_sk();
                 failu_kurimas("studentai1000.txt", 1000, m, b);
