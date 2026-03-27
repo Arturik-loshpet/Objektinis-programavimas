@@ -392,14 +392,16 @@ void skaitymas(StudentContainer& stud, const std::string& input, double& laikas)
 template <typename StudentContainer>
 void skirstymas(StudentContainer& stud, StudentContainer& maladiec, StudentContainer& lopai, double& laikas) {
     const auto pradzia = std::chrono::high_resolution_clock::now();
-    for (const auto& studentas : stud) {
-        if (studentas.vid < 5) {
-            lopai.push_back(studentas);
-        } else {
-            maladiec.push_back(studentas);
-        }
+    (void)stud;
+
+    auto border = std::partition(maladiec.begin(), maladiec.end(), [](const auto& studentas) {
+        return studentas.vid >= 5;
+    });
+
+    for (auto it = border; it != maladiec.end(); ++it) {
+        lopai.push_back(*it);
     }
-    stud.clear();
+    maladiec.erase(border, maladiec.end());
 
     const auto pabaiga = std::chrono::high_resolution_clock::now();
     const std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
@@ -429,9 +431,9 @@ void rasymas(const StudentContainer& a, const std::string& name, double& laikas)
 
 template <typename StudentContainer>
 void testavimas(StudentContainer& stud, StudentContainer& maladiec, StudentContainer& lopai, double& laikas) {
-    vidurkis(stud);
-    mediana(stud);
-    sort_ascending(stud, laikas);
+    vidurkis(maladiec);
+    mediana(maladiec);
+    sort_ascending(maladiec, laikas);
     skirstymas(stud, maladiec, lopai, laikas);
     rasymas(maladiec, "maladiec.txt", laikas);
     rasymas(lopai, "lopai.txt", laikas);
@@ -474,7 +476,7 @@ void tyrimai_5(StudentContainer& stud, StudentContainer& maladiec, StudentContai
         lopai.clear();
         laikas = 0;
 
-        skaitymas(stud, failo_vardas, laikas);
+        skaitymas(maladiec, failo_vardas, laikas);
         testavimas(stud, maladiec, lopai, laikas);
     }
 }
@@ -590,6 +592,7 @@ void sort_ascending(Container& c, double& laikas) {
     }
     const auto pabaiga = std::chrono::high_resolution_clock::now();
     const std::chrono::duration<double, std::milli> trukme = pabaiga - pradzia;
+    std::cout << "Sort truko " << trukme.count() << std::endl;
     laikas += trukme.count();
 }
 
