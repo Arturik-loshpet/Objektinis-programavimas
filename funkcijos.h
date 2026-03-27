@@ -14,6 +14,7 @@ struct Studentas {
     double med = 0.0;
 };
 
+//
 
 using VectorStudent = Studentas<std::vector<int>>;
 using ListStudent = Studentas<std::list<int>>;
