@@ -13,7 +13,6 @@ struct Studentas {
     double vid = 0.0;
     double med = 0.0;
 };
-//f
 using VectorStudent = Studentas<std::vector<int>>;
 using ListStudent = Studentas<std::list<int>>;
 using DequeStudent = Studentas<std::deque<int>>;
