@@ -16,7 +16,6 @@ struct Studentas {
 //f
 //g
 //kazkaip
-//g
 using VectorStudent = Studentas<std::vector<int>>;
 using ListStudent = Studentas<std::list<int>>;
 using DequeStudent = Studentas<std::deque<int>>;
