@@ -24,18 +24,26 @@ int validation(const std::string& a) {
 }
 
 bool read_input(std::string& input) {
-    if (std::cin >> input) {
-        return true;
+    try {
+        if (std::cin >> input) {
+            return true;
+        }
+
+        if (std::cin.eof()) {
+            std::cout << "Ivestis nutraukta." << std::endl;
+            return false;
+        }
+
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Netinkama ivestis. Bandykite dar karta." << std::endl;
+    }
+    catch (const std::exception&) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Klaida skaitant ivesti. Bandykite dar karta." << std::endl;
     }
 
-    if (std::cin.eof()) {
-        std::cout << "Ivestis nutraukta." << std::endl;
-        return false;
-    }
-
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cout << "Netinkama ivestis. Bandykite dar karta." << std::endl;
     return false;
 }
 
